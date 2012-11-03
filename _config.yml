@@ -8,5 +8,5 @@ feed: /atom.xml
 author:
     name: sun ming hong
     email: 5d13.cn@gmail.com
-    twitter: weibo.com/5d13cn
+    twitter: http://weibo.com/5d13cn
 description: 这是 孙铭鸿 的博客，它是基于 Jekyll 搭建起来的。在这里，不仅仅是用来快速记录工作，学习，生活的一点一滴的地方，更是 孙铭鸿 对 Jekyll 的学习和使用的一次有意义的实践。
