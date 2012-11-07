@@ -1,16 +1,16 @@
 /**
  * @name:        violet.js
- * @author:      pizn(pizner@gmail.com)
+ * @author:      pizn(5d13.cn@gmail.com)
  * @description: This is the violet theme js source.
  */
 var violet = violet || {
     VERSION: '2.0',
     checkViolet: function() {
-    	var str = document.domain, rule = /^(www\.pizn\.me)?$/, url = "http://www.pizn.me", cookie_Key="__isViole__", cookie_value="Y";
-    	if(!rule.test(str)) {
-    		//document.cookie = cookie_key+'='+cookie_value+';expires='+new Date(new Date().getTime()+3600*24*30*1000).toUTCString();
-    		window.location.replace(url);
-    	}
+    	//var str = document.domain, rule = /^(blog\.5d13\.cn)?$/, url = "http://blog.5d13.cn", cookie_Key="__isViole__", cookie_value="Y";
+    	//if(!rule.test(str)) {
+    		////document.cookie = cookie_key+'='+cookie_value+';expires='+new Date(new Date().getTime()+3600*24*30*1000).toUTCString();
+    		//window.location.replace(url);
+    	//}
     	/**
     	var isViolet = document.cookie.match(new RegExp(cookie_Key+ '=([Y])'))
     	console.log(isViolet)
@@ -134,13 +134,13 @@ var violet = violet || {
                     				   </article>';
                     		$(id).append(project);
     					}
-    					project = '<p class="v-more-right v-project-mor"><a href="https://github.com/' + user + '" target="_blank" title="PIZn on github"><span>&#10149;</span>All Projects</a></p>';
+    					project = '<p class="v-more-right v-project-mor"><a href="https://github.com/' + user + '" target="_blank" title="sunminghong on github"><span>&#10149;</span>All Projects</a></p>';
     					$(id).append(project);
     				}
     			} else {
     				errmsg = '<article class="v-project-normal"><p>通过项目的开发过程，能够得到更多的锻炼。</p>\
-    						  <p>在 GitHub 上有 PIZn 的几个小项目，例如 Alice, ColorCode, Blog 等等。</p></article>\
-    					      <p class="v-more-right"><a href="https://github.com/' + user + '" target="_blank" title="PIZn on github"><span>&#10149;</span>All Projects</a></p>';
+    						  <p>在 GitHub 上有 sunminghong 的几个小项目，例如 Alice, ColorCode, Blog 等等。</p></article>\
+    					      <p class="v-more-right"><a href="https://github.com/' + user + '" target="_blank" title="sunminghong on github"><span>&#10149;</span>All Projects</a></p>';
     				$(id).append(errmsg);
     			}
     		}

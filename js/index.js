@@ -1,7 +1,7 @@
 /**
  * @name:		index.js
- * @author: 	pizn(pizner@gmail.com)
- * @desctions:  This is the js source for pizn.me's index.
+ * @author: 	sunminghong(5d13.cn@gmail.com)
+ * @desctions:  This is the js source for blog.5d13.cn's index.
  */
 $(document).ready(function() {
         var content = '';

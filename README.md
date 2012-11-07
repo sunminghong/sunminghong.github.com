@@ -14,15 +14,13 @@ This is the source code for <a href="http://blog.5d13.cn" target="_blank" title=
 
 blog.5d13.cn 上的文章采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank">署名-非商业性使用-相同方式共享</a>协议进行授权，转载请注明转自：<a href="http://blog.5d13.cn" target="_blank">孙铭鸿</a>.
 
-设计界面由<a href="http://pizn.net" target="_blank">PIZn</a>设计提供，图片视觉设计版权由 PIZn 所有。<a href="http://blog.5d13.cn" target="_blank">PIZn.me</a>的紫色主题是 PIZn 的私有主题，如果你喜欢这个主题，请提前跟我说下，并注明是 <a href="http://blog.5d13.cn" target="_blank">PIZn</a>开发和设计的。谢谢。PS: 我很鄙视别人用了我的劳动成果，还注明是他自己设计的。请尊重在下！
-
 站点其他代码采用  <a href="http://zh.wikipedia.org/wiki/MIT_License" target="_blank">MIT License 许可。</a>
 
 ##联系我
 
 如果你也想像我这样来写博客，搭建 GitHub 博客，如果有啥不懂的，我们互相交流！
 
-邮箱: pizner@gmail.com
+邮箱: 5d13.cn@gmail.com
 
 ##Todo
 
