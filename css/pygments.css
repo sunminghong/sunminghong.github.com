@@ -436,3 +436,15 @@
 .vg { color: #f8f8f2 } /* Name.Variable.Global */
 .vi { color: #f8f8f2 } /* Name.Variable.Instance */
 .il { color: #ae81ff } /* Literal.Number.Integer.Long */
+
+
+code {background:#eee;}
+pre {background:#222; padding:10px;}
+pre code {padding:0; background-color:inherit !important;}
+pre code * {
+    font-weight:normal !important; background-color:inherit !important;
+    text-decoration:none !important;
+}
+code, code * {font-family: Menlo, Monaco, 'Andale Mono', 'lucida console', 'Courier New', monospace;}
+pre, table {margin:20px 0;}
+
