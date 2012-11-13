@@ -105,7 +105,7 @@ class IDAllocor(object):
 if __name__ == '__main__':
     import random,codecs
 
-    alloc = AllocID(32767)
+    alloc = IDAllocor(32767)
     
     f = codecs.open('d:\\testallocid.csv' , "a", "utf-8")
     co = 0
