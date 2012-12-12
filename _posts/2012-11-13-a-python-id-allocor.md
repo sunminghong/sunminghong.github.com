@@ -7,7 +7,7 @@ keywords: pid,python,房间号
 
 [firePhoenix][firePhoenix]项目里需要给连接的客户端分配一个唯一的客户ID，类似socketid、系统进程ID（pid），于是模拟linux PID的分配算法实现一个ID分配器。
 
-{% highlight python %}
+{% highlight python linenos %}
 class IDAllocor(object):
     '''分配一个唯一的ID，如clientID，pid'''
 
