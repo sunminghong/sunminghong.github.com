@@ -1,6 +1,6 @@
 /**
  * @name:        violet.js
- * @author:      pizn(5d13.cn@gmail.com)
+ * @author:      pizn
  * @description: This is the violet theme js source.
  */
 var violet = violet || {
