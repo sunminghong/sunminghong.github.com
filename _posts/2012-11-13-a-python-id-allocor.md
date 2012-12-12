@@ -3,6 +3,7 @@ layout: post
 title: 一个用python写类unix进程id分配器
 description: 可用于一些需要在有限的号码区间内分配唯一ID的应用，如游戏里的房间号、在线客户ID等
 keywords: pid,python,房间号
+isPost: 1
 ---
 
 [firePhoenix][firePhoenix]项目里需要给连接的客户端分配一个唯一的客户ID，类似socketid、系统进程ID（pid），于是模拟linux PID的分配算法实现一个ID分配器。
