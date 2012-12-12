@@ -152,7 +152,7 @@ body .fn-hide { display:none; }
 
 /** violet-site **/
 .violet-site { float: left; margin: 20px 0 12px 14px; position: relative; width: 188px; color: #f8f8f8; }
-.violet-site h1, .violet-site h1 a { font-family: "Times New Roman",Times,serif; font-size: 32px; line-height: 50px; font-weight: normal; color: #f6f6f6; }
+.violet-site h1, .violet-site h1 a { font-family: "Times New Roman",Times,serif; font-size: 32px; line-height: 50px; font-weight: normal; color: #f6f6f6; margin-top:-5px;}
 .violet-site h1 a:hover { color: #fff; text-shadow: 0px 0px 5px #4e003a; text-decoration: none; }
 .violet-site h1 span { display: inline; padding: 0px 5px 0 3px; position: relative; line-height: 12px; font-size: 10px; font-family: Verdana,Arial,Helvetica,sans-serif; color: #800888; background: #fed640; border-radius: 7px 0px 7px 0; top: -23px; left: 5px; font-weight: 600; }
 .violet-site h2 { padding-top: 2px; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 14px; line-height: 14px; border-top: 1px solid #f8f8f8; }
