@@ -14,15 +14,10 @@ keywords: git,hooks,script,branch,tag,钩子,脚本,分支,标签,游戏开发�
 \****/home/game***下没有相应的分支文件夹的就不自动发布。
 \*git 服务器的帐号**git**
 
-######变量约定
-* $GIT_REPO_PATH$ ，git版本库的在服务器上的**物理路径**，如：***/home/git/repositories/sg/xxx.git***
-* $REPO_NAME$， 要发布的版本库名，如
-* $PUB_PATH$
-
 ######1、建立发布文件夹
 这一步超重要，这是经过几天折腾“升华”出的最佳流程，如果读者想尽快投入使用，照着做是做就可以了。
 
-{% highlight bash %}
+{% highlight bash lineno%}
 $su -l git #切换到git帐号，适用于给git服务器程序专门的帐号的情况（推荐这样部署git服务器）
 $umask 002
 $cd /home/game
@@ -32,13 +27,13 @@ $git clone /home/git/repositories/sg/xxx.git -b branchB branchB
 
 ######2、git钩子脚本
 
-{% highlight bash %}
+{% highlight bash lineno%}
 $cd /home/git/repositories/sg/sgserver.git/hooks
 $vim post-receive #写入如下代码，保存
 $chmod +x post-receive
 {% endhighlight %}
 
-{% highlight python %}
+{% highlight python lineno%}
 #!/usr/bin/python
 #coding:utf-8
 #hoos/post-receive
