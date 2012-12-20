@@ -11,8 +11,9 @@ keywords: git,hooks,script,branch,tag,钩子,脚本,分支,标签,游戏开发�
 * 否则，只有钩子脚本可供参考
 * 我不是git专家，我对git的使用观念是够用就好，本文是满足我需求的实践总结，大家随意交流，如有转载是我的荣幸！。
 
-本文模拟一个场景：我们需要在服务器 **SERVER** 上将 ***/home/git/repositories/sg/xxx.git*** 提交自动发布/更新到**/home/game/**下同名的文件夹下，例如的 **branchA** 分支自动发布/更新到 ***/home/game/branchA*** ，**branchB** 分支自动发布/更新到 ***/home/game/branchB***。
-\****/home/game***下没有相应的分支文件夹的就不自动发布。
+本文模拟一个场景：我们需要在服务器 **SERVER** 上将 */home/git/repositories/sg/xxx.git* 提交自动发布/更新到*/home/game/*下同名的文件夹下，例如的 **branchA** 分支自动发布/更新到 */home/game/branchA* ，**branchB** 分支自动发布/更新到 */home/game/branchB*。
+
+\**/home/game*下没有相应的分支文件夹的就不自动发布。  
 \*git 服务器的帐号**git**
 
 ######1、建立发布文件夹
