@@ -1452,3 +1452,7 @@ p.v-my-face { padding-bottom: 0; margin: 0 auto 10px auto; text-align: right}
 .head-tips p a {
 	color: #4d8bbc;
 }
+
+#writerby {text-align:right;}
+#writeby img {height:48px;}
+
