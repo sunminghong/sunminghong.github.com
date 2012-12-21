@@ -14,18 +14,24 @@ keywords: git,hooks,script,branch,tag,钩子,脚本,分支,标签,游戏开发�
 本文模拟一个场景：我们需要在服务器 **SERVER** 上将 */home/git/repositories/sg/xxx.git* 提交自动发布/更新到*/home/game/*下同名的文件夹下，例如的 **branchA** 分支自动发布/更新到 */home/game/branchA* ，**branchB** 分支自动发布/更新到 */home/game/branchB*。
 
 \**/home/game*下没有相应的分支文件夹的就不自动发布。
+
 \*git 服务器的帐号**git**
 
 ######1、建立发布文件夹
 这一步超重要，这是经过几天折腾“升华”出的最佳流程，如果读者想尽快投入使用，照着做是做就可以了。
 
 {% highlight bash lineno%}
-$su -l git #切换到git帐号，适用于给git服务器程序专门的帐号的情况（推荐这样部署git服务器）
-$umask 002
+$su -l root #输入root密码切换到root
+$su -l git #再切换到git帐号，详见备注1
+$umask 002 #可参见备注2
 $cd /home/game
 $git clone /home/git/repositories/sg/xxx.git -b branchA branchA
 $git clone /home/git/repositories/sg/xxx.git -b branchB branchB
 {% endhighlight %}
+
+\*备注：
+1. 适用于给git服务器程序专门的帐号的情况（推荐这样部署git服务器），此时git帐号是没有密码不能直接切换的，所以可以先进root再切换到git。
+2. *umask 002* 是设置git帐号下操作建立的文件的默认权限为775，这样别的帐号就对发布文件夹有足够的权限
 
 ######2、git钩子脚本
 
