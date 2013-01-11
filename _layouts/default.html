@@ -204,6 +204,28 @@
 	-->
     {% if(page.isPost) %}
     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+	<script>
+(function(b) {
+    var a = b.document;
+    b.onload = function() {
+        if (document.createElement("canvas").getContext("2d")) {
+            var c = document.createElement("script");
+            c.onload = function() {
+                window.QR && QR.encode(document.location.href + "", 240, 10, "#000", "circles",
+                function(c) {
+                    var b = new Image;
+                    b.src = c;
+                    a.getElementById("qr").appendChild(b);
+                    a.getElementById("qr").style.display = "block"
+                })
+            };
+            c.src = "/js/qr.min.js";
+            a.body.appendChild(c)
+        }
+    }
+})(window);
+	</script>
+
     {% endif %}
 </body>
 </html>
