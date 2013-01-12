@@ -10,7 +10,6 @@
      **
    -->
     <meta charset="utf-8" />
-	<meta property="wb:webmaster" content="e7d34d7ea31c08b0" />
     <title>
         {% if page.title %}
             {{ page.title }}
@@ -205,6 +204,7 @@
     {% if(page.isPost) %}
     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 	<script>
+		if (document.getElementById('qr')) {
 (function(b) {
     var a = b.document;
     b.onload = function() {
@@ -224,6 +224,7 @@
         }
     }
 })(window);
+}
 	</script>
 
     {% endif %}
