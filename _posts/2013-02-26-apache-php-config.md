@@ -36,7 +36,7 @@ selinux 不关闭的情况下，我的网站总是不正常，总是提示“403
 vim /etc/selinux/config
 
 在 SELINUX=enforcing 前面加个#号注释掉它
-#SELINUX=enforcing
+\#SELINUX=enforcing
 
 然后新加一行
 SELINUX=disabled
