@@ -5,7 +5,7 @@ description: 本文是我对一次不顺利的 centos6.2+Apache+php+mysql 配置
 keywords: centos,apache,php,mysql
 ---
 
-######1. 安装Apahce, PHP, Mysql, 以及php连接mysql库组件。
+###1. 安装Apahce, PHP, Mysql, 以及php连接mysql库组件。
 {% highlight bash lineno%}
 su -l root #输入root密码切换到root
 
@@ -20,7 +20,7 @@ yum -y install httpd php mysql mysql-server php-mysql
 
 {% endhighlight %}
 
-######2.设置mysql数据库root帐号密码及基本配置
+###2.设置mysql数据库root帐号密码及基本配置
 {% highlight bash lineno%}
 mysqladmin -u root password 'newpassword' #[引号内填密码]
 
@@ -31,7 +31,7 @@ mysql> FLUSH PRIVILEGES; #[重载权限]
 
 {% endhighlight %}
 
-######3.关闭selinux安全系统
+###3.关闭selinux安全系统
 selinux 不关闭的情况下，我的网站总是不正常，总是提示“403 ”没有权限错误，所以特别记录如下.
 vim /etc/selinux/config
 
@@ -43,8 +43,8 @@ SELINUX=disabled
 
 **保存，退出，重启系统，搞定。**
 
-######4.httpd和php.ini配置略
+###4.httpd和php.ini配置略
 
-######5.其它点滴记录：
+###5.其它点滴记录：
 + 添加新用户 *grant all privileges on DATABASENAME.\* to 'USERNAME'@'localhost' identified by 'PASSWORD';
 
