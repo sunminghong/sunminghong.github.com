@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>14.2 Session支持</h1>
+
+<p>第六章的时候我们介绍过如何在Go语言中使用session，也实现了一个sessionManger，beego框架基于sessionManager实现了方便的session处理功能。</p>
+
+<h2>session集成</h2>
+
+<p>beego中主要有以下的全局变量来控制session处理：</p>
+
+<pre><code>//related to session 
+SessionOn            bool   // 是否开启session模块，默认不开启
+SessionProvider      string // session后端提供处理模块，默认是sessionManager支持的memory
+SessionName          string // 客户端保存的cookies的名称
+SessionGCMaxLifetime int64  // cookies有效期
+
+GlobalSessions *session.Manager //全局session控制器
+</code></pre>
+
+<p>当然上面这些变量需要初始化值，也可以按照下面的代码来配合配置文件以设置这些值：</p>
+
+<pre><code>if ar, err := AppConfig.Bool(&quot;sessionon&quot;); err != nil {
+    SessionOn = false
+} else {
+    SessionOn = ar
+}
+if ar := AppConfig.String(&quot;sessionprovider&quot;); ar == &quot;&quot; {
+    SessionProvider = &quot;memory&quot;
+} else {
+    SessionProvider = ar
+}
+if ar := AppConfig.String(&quot;sessionname&quot;); ar == &quot;&quot; {
+    SessionName = &quot;beegosessionID&quot;
+} else {
+    SessionName = ar
+}
+if ar, err := AppConfig.Int(&quot;sessiongcmaxlifetime&quot;); err != nil &amp;&amp; ar != 0 {
+    int64val, _ := strconv.ParseInt(strconv.Itoa(ar), 10, 64)
+    SessionGCMaxLifetime = int64val
+} else {
+    SessionGCMaxLifetime = 3600
+}   
+</code></pre>
+
+<p>在beego.Run函数中增加如下代码：</p>
+
+<pre><code>if SessionOn {
+    GlobalSessions, _ = session.NewManager(SessionProvider, SessionName, SessionGCMaxLifetime)
+    go GlobalSessions.GC()
+}
+</code></pre>
+
+<p>这样只要SessionOn设置为true，那么就会默认开启session功能，独立开一个goroutine来处理session。</p>
+
+<p>为了方便我们在自定义Controller中快速使用session，作者在<code>beego.Controller</code>中提供了如下方法：</p>
+
+<pre><code>func (c *Controller) StartSession() (sess session.Session) {
+    sess = GlobalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+    return
+}       
+</code></pre>
+
+<h2>session使用</h2>
+
+<p>通过上面的代码我们可以看到，beego框架简单地继承了session功能，那么在项目中如何使用呢？</p>
+
+<p>首先我们需要在应用的main入口处开启session：</p>
+
+<pre><code>beego.SessionOn = true
+</code></pre>
+
+<p>然后我们就可以在控制器的相应方法中如下所示的使用session了：</p>
+
+<pre><code>func (this *MainController) Get() {
+    var intcount int
+    sess := this.StartSession()
+    count := sess.Get(&quot;count&quot;)
+    if count == nil {
+        intcount = 0
+    } else {
+        intcount = count.(int)
+    }
+    intcount = intcount + 1
+    sess.Set(&quot;count&quot;, intcount)
+    this.Data[&quot;Username&quot;] = &quot;astaxie&quot;
+    this.Data[&quot;Email&quot;] = &quot;astaxie@gmail.com&quot;
+    this.Data[&quot;Count&quot;] = intcount
+    this.TplNames = &quot;index.tpl&quot;
+}
+</code></pre>
+
+<p>上面的代码展示了如何在控制逻辑中使用session，主要分两个步骤：</p>
+
+<ol>
+<li><p>获取session对象</p>
+
+<pre><code>//获取对象,类似PHP中的session_start()
+sess := this.StartSession()
+</code></pre></li>
+
+<li><p>使用session进行一般的session值操作</p>
+
+<pre><code>//获取session值，类似PHP中的$_SESSION[&quot;count&quot;]
+sess.Get(&quot;count&quot;)
+
+
+//设置session值
+sess.Set(&quot;count&quot;, intcount)
+</code></pre></li>
+</ol>
+
+<p>从上面代码可以看出基于beego框架开发的应用中使用session相当方便，基本上和PHP中调用<code>session_start()</code>类似。</p>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一节: <a href="14.1.html">静态文件支持</a></li>
+<li>下一节: <a href="14.3.html">表单及验证支持</a></li>
+</ul>
+</html>

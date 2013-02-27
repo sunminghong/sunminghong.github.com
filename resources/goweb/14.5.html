@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>14.5 多语言支持</h1>
+
+<p>我们在第十章介绍过国际化和本地化，开发了一个go-i18n库，这小节我们将把该库集成到beego框架里面来，使得我们的框架支持国际化和本地化。</p>
+
+<h2>i18n集成</h2>
+
+<p>beego中设置全局变量如下：</p>
+
+<pre><code>Translation i18n.IL  
+Lang        string  //设置语言包，zh、en
+LangPath    string  //设置语言包所在位置
+</code></pre>
+
+<p>初始化多语言函数:</p>
+
+<pre><code>func InitLang(){
+    beego.Translation:=i18n.NewLocale()
+    beego.Translation.LoadPath(beego.LangPath)
+    beego.Translation.SetLocale(beego.Lang)
+}
+</code></pre>
+
+<p>为了方便在模板中直接调用多语言包，我们设计了三个函数来处理响应的多语言：</p>
+
+<pre><code>beegoTplFuncMap[&quot;Trans&quot;] = i18n.I18nT
+beegoTplFuncMap[&quot;TransDate&quot;] = i18n.I18nTimeDate
+beegoTplFuncMap[&quot;TransMoney&quot;] = i18n.I18nMoney
+
+func I18nT(args ...interface{}) string {
+    ok := false
+    var s string
+    if len(args) == 1 {
+        s, ok = args[0].(string)
+    }
+    if !ok {
+        s = fmt.Sprint(args...)
+    }
+    return beego.Translation.Translate(s)
+}
+
+func I18nTimeDate(args ...interface{}) string {
+    ok := false
+    var s string
+    if len(args) == 1 {
+        s, ok = args[0].(string)
+    }
+    if !ok {
+        s = fmt.Sprint(args...)
+    }
+    return beego.Translation.Time(s)
+}   
+
+func I18nMoney(args ...interface{}) string {
+    ok := false
+    var s string
+    if len(args) == 1 {
+        s, ok = args[0].(string)
+    }
+    if !ok {
+        s = fmt.Sprint(args...)
+    }
+    return beego.Translation.Money(s)
+}
+</code></pre>
+
+<h2>多语言开发使用</h2>
+
+<ol>
+<li><p>设置语言以及语言包所在位置，然后初始化i18n对象：</p>
+
+<pre><code>beego.Lang = &quot;zh&quot;
+beego.LangPath = &quot;views/lang&quot;
+beego.InitLang()
+</code></pre></li>
+
+<li><p>设计多语言包</p>
+
+<p>上面讲了如何初始化多语言包，现在设计多语言包，多语言包是json文件，如第十章介绍的一样，我们需要把设计的文件放在LangPath下面，例如zh.json或者en.json</p>
+
+<pre><code># zh.json
+
+
+{
+&quot;zh&quot;: {
+    &quot;submit&quot;: &quot;提交&quot;,
+    &quot;create&quot;: &quot;创建&quot;
+    }
+}
+
+
+#en.json
+
+
+{
+&quot;en&quot;: {
+    &quot;submit&quot;: &quot;Submit&quot;,
+    &quot;create&quot;: &quot;Create&quot;
+    }
+}
+</code></pre></li>
+
+<li><p>使用语言包</p>
+
+<p>我们可以在controller中调用翻译获取响应的翻译语言，如下所示：</p>
+
+<pre><code>func (this *MainController) Get() {
+    this.Data[&quot;create&quot;] = beego.Translation.Translate(&quot;create&quot;)
+    this.TplNames = &quot;index.tpl&quot;
+}
+</code></pre>
+
+<p>我们也可以在模板中直接调用响应的翻译函数：</p>
+
+<pre><code>//直接文本翻译
+{{.create | Trans}}
+
+
+//时间翻译
+{{.time | TransDate}}   
+
+
+//货币翻译
+{{.money | TransMoney}} 
+</code></pre></li>
+</ol>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一节: <a href="14.4.html">用户认证</a></li>
+<li>下一节: <a href="14.6.html">pprof支持</a></li>
+</ul>
+</html>

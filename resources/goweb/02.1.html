@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>2.1 你好，Go</h1>
+
+<p>在开始编写应用之前，我们先从最基本的程序开始。就像你造房子之前不知道什么是地基一样，编写程序也不知道如何开始。因此，在本节中，我们要学习用最基本的语法让Go程序运行起来。</p>
+
+<h2>程序</h2>
+
+<p>这就像一个传统，在学习大部分语言之前，你先学会如何编写一个可以输出<code>hello world</code>的程序。</p>
+
+<p>准备好了吗？Let&rsquo;s Go!</p>
+
+<pre><code>package main
+
+import &quot;fmt&quot;
+
+func main() {
+    fmt.Printf(&quot;Hello, world or 你好，世界 or καλημ ́ρα κóσμ or こんにちは世界\n&quot;)
+}
+</code></pre>
+
+<p>输出如下：</p>
+
+<pre><code>Hello, world or 你好，世界 or καλημ ́ρα κóσμ or こんにちは世界
+</code></pre>
+
+<h2>详解</h2>
+
+<p>首先我们要了解一个概念，Go程序是通过<code>package</code>来组织的</p>
+
+<p><code>package &lt;pkgName&gt;</code>（在我们的例子中是<code>package main</code>）这一行告诉我们当前文件属于哪个包，而包名<code>main</code>则告诉我们它是一个可独立运行的包，它在编译后会产生可执行文件。除了<code>main</code>包之外，其它的包最后都会生成<code>*.a</code>文件（也就是包文件）并放置在<code>$GOPATH/pkg/$GOOS_$GOARCH</code>中（以Mac为例就是<code>$GOPATH/pkg/darwin_amd64</code>）。</p>
+
+<blockquote>
+<p>每一个可独立运行的Go程序，必定包含一个<code>package main</code>，在这个<code>main</code>包中必定包含一个入口函数<code>main</code>，而这个函数既没有参数，也没有返回值。</p>
+</blockquote>
+
+<p>为了打印<code>Hello, world...</code>，我们调用了一个函数<code>Printf</code>，这个函数来自于<code>fmt</code>包，所以我们在第三行中导入了系统级别的<code>fmt</code>包：<code>import &quot;fmt&quot;</code>。</p>
+
+<p>包的概念和Python中的package类似，它们都有一些特别的好处：模块化（能够把你的程序分成多个模块)和可重用性（每个模块都能被其它应用程序反复使用）。我们在这里只是先了解一下包的概念，后面我们将会编写自己的包。</p>
+
+<p>在第五行中，我们通过关键字<code>func</code>定义了一个<code>main</code>函数，函数体被放在<code>{}</code>（大括号）中，就像我们平时写C、C++或Java时一样。</p>
+
+<p>大家可以看到<code>main</code>函数是没有任何的参数的，我们接下来就学习如何编写带参数的、返回0个或多个值的函数。</p>
+
+<p>第六行，我们调用了<code>fmt</code>包里面定义的函数<code>Printf</code>。大家可以看到，这个函数是通过<code>&lt;pkgName&gt;.&lt;funcName&gt;</code>的方式调用的，这一点和Python十分相似。</p>
+
+<blockquote>
+<p>前面提到过，包名和包所在的文件夹名可以是不同的，此处的<code>&lt;pkgName&gt;</code>即为通过<code>package &lt;pkgName&gt;</code>声明的包名，而非文件夹名。</p>
+</blockquote>
+
+<p>最后大家可以看到我们输出的内容里面包含了很多非ASCII码字符。实际上，Go是天生支持UTF-8的，任何字符都可以直接输出，你甚至可以用UTF-8中的任何字符作为标识符。</p>
+
+<h2>结论</h2>
+
+<p>Go使用<code>package</code>（和Python的模块类似）来组织代码。<code>main.main()</code>函数(这个函数主要位于主包）是每一个独立的可运行程序的入口点。Go使用UTF-8字符串和标识符(因为UTF-8的发明者也就是Go的发明者)，所以它天生就具有多语言的支持。</p>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一节: <a href="02.0.html">Go语言基础</a></li>
+<li>下一节: <a href="02.2.html">Go基础</a></li>
+</ul>
+</html>

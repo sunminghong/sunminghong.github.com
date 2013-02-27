@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>《Go Web 编程》</h1>
+
+<p>因为自己对Web开发比较感兴趣，所以最近抽空在写一本开源的书籍《Go Web编程》《Build Web Application with Golang》。写这本书不表示我能力很强，而是我愿意分享，和大家一起分享Go写Web应用的一些东西。</p>
+
+<ul>
+<li><p>对于从PHP/Python/Ruby转过来的同学了解Go怎么写Web应用开发的</p></li>
+
+<li><p>对于从C/C++转过来的同学了解Web到底是怎么运行起来的</p></li>
+</ul>
+
+<p>我一直认为知识是用来分享的，让更多的人分享自己拥有的一切知识这个才是人生最大的快乐。</p>
+
+<p>这本书目前我放在Github上，我现在基本每天晚上抽空会写一些，时间有限、能力有限，所以希望更多的朋友参与到这个开源项目中来。</p>
+
+<h2>撰写方法</h2>
+
+<h3>文件命名</h3>
+
+<p>每个章节建立一个md文件，如第11章的第3节，则建立<strong>11.3.md</strong>。</p>
+
+<h3>代码文件</h3>
+
+<p>代码文件置于src目录之下。每小节代码按目录存放。如第11章的第3节的代码保存于<strong>src/11.3/</strong>目录下。在正文中按需要添加代码。</p>
+
+<h2>格式规范</h2>
+
+<h3>正文</h3>
+
+<p>请参看已有章节的规范，要注意的是，每个章节在底部都需要有一个links节，包含“目录”，“上一节”和“下一节”的链接。</p>
+
+<h3>代码</h3>
+
+<p>代码要<strong><code>go fmt</code></strong>后提交。注释文件注明其所属章节。</p>
+
+<h2>如何编译</h2>
+
+<p><code>build.go</code>依赖markdown的一个解析包，所以第一步先</p>
+
+<pre><code>go get github.com/russross/blackfriday
+</code></pre>
+
+<p>这样读者就可以把相应的Markdown文件编译成html文件，执行<code>go build build.go</code>，执行生成的文件，就会在底目录下生成相应的html文件</p>
+
+<h2>交流</h2>
+
+<p>欢迎大家加入QQ群：259316004 《Go Web编程》专用交流群</p>
+
+<p>大家有问题还可以上德问上一起交流学习：http://www.dewen.org/topic/165</p>
+
+<h2>致谢</h2>
+
+<p>首先要感谢Golang-China的QQ群102319854，里面的每一个人都很热心，同时要特别感谢几个人</p>
+
+<ul>
+<li><a href="https://plus.google.com/110445767383269817959">四月份平民</a> (review代码)</li>
+<li><a href="https://github.com/hongruiqi">Hong Ruiqi</a> (review代码)</li>
+<li><a href="https://github.com/border">BianJiang</a> (编写go开发工具Vim和Emacs的设置)</li>
+<li><a href="https://github.com/OlingCat">Oling Cat</a>(review代码)</li>
+<li><a href="mailto:spadesacn@gmail.com">Wenlei Wu</a>(提供一些图片展示)</li>
+<li><a href="https://github.com/polaris1119">polaris</a>(review书)</li>
+<li><a href="https://github.com/qyuhen">雨痕</a>(review第二章)</li>
+</ul>
+
+<h2>授权许可</h2>
+
+<p>除特别声明外，本书中的内容使用<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0 License</a>（创作共用 署名-相同方式共享3.0许可协议）授权，代码遵循<a href="https://github.com/astaxie/build-web-application-with-golang/blob/master/LICENSE.html">BSD 3-Clause License</a>（3项条款的BSD许可协议）。</p>
+
+<h2>开始阅读</h2>
+
+<p><a href="https://github.com/astaxie/build-web-application-with-golang/blob/master/preface.html">开始阅读</a></p>
+
+<p><a href="http://githalytics.com/astaxie/build-web-application-with-golang">![githalytics.com alpha](https://cruel-carlota.pagodabox.com/44c98c9d398b8319b6e87edcd3e34144 &ldquo;githalytics.com&rdquo;)</a></p>
+</html>

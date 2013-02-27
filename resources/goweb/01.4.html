@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>1.4 Go开发工具</h1>
+
+<p>本节我将介绍几个开发工具，它们都具有自动化提示，自动化fmt功能。因为它们都是跨平台的，所以安装步骤之类的都是通用的。</p>
+
+<h2>LiteIDE</h2>
+
+<p>LiteIDE是一款专门为Go语言开发的跨平台轻量级集成开发环境（IDE），由visualfc编写。</p>
+
+<p><img src="images/1.4.liteide.png?raw=true" alt="" />
+</p>
+
+<p>图1.4 LiteIDE主界面</p>
+
+<p><strong>LiteIDE主要特点：</strong></p>
+
+<ul>
+<li>支持主流操作系统
+
+<ul>
+<li>Windows</li>
+<li>Linux</li>
+<li>MacOS X</li>
+</ul></li>
+<li>Go编译环境管理和切换
+
+<ul>
+<li>管理和切换多个Go编译环境</li>
+<li>支持Go语言交叉编译</li>
+</ul></li>
+<li>与Go标准一致的项目管理方式
+
+<ul>
+<li>基于GOPATH的包浏览器</li>
+<li>基于GOPATH的编译系统</li>
+<li>基于GOPATH的Api文档检索</li>
+</ul></li>
+<li>Go语言的编辑支持
+
+<ul>
+<li>类浏览器和大纲显示</li>
+<li>Gocode(代码自动完成工具)的完美支持</li>
+<li>Go语言文档查看和Api快速检索</li>
+<li>代码表达式信息显示<code>F1</code></li>
+<li>源代码定义跳转支持<code>F2</code></li>
+<li>Gdb断点和调试支持</li>
+<li>gofmt自动格式化支持</li>
+</ul></li>
+<li>其他特征
+
+<ul>
+<li>支持多国语言界面显示</li>
+<li>完全插件体系结构</li>
+<li>支持编辑器配色方案</li>
+<li>基于Kate的语法显示支持</li>
+<li>基于全文的单词自动完成</li>
+<li>支持键盘快捷键绑定方案</li>
+<li>Markdown文档编辑支持
+
+<ul>
+<li>实时预览和同步显示</li>
+<li>自定义CSS显示</li>
+<li>可导出HTML和PDF文档</li>
+<li>批量转换/合并为HTML/PDF文档</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p><strong>LiteIDE安装配置</strong></p>
+
+<ul>
+<li><p>LiteIDE安装</p>
+
+<ul>
+<li>下载地址 <a href="http://code.google.com/p/golangide">http://code.google.com/p/golangide</a></li>
+<li>源码地址 <a href="https://github.com/visualfc/liteide">https://github.com/visualfc/liteide</a></li>
+</ul>
+
+<p>首先安装好Go语言环境，然后根据操作系统下载LiteIDE对应的压缩文件直接解压即可使用。</p></li>
+
+<li><p>安装Gocode</p>
+
+<p>启用Go语言的输入自动完成需要安装Gocode：</p>
+
+<pre><code>go get -u github.com/nsf/gocode
+</code></pre></li>
+
+<li><p>编译环境设置</p>
+
+<p>根据自身系统要求切换和配置LiteIDE当前使用的环境变量。</p>
+
+<p>以Windows操作系统，64位Go语言为例，
+工具栏的环境配置中选择win64，点<code>编辑环境</code>，进入LiteIDE编辑win64.env文件</p>
+
+<pre><code>GOROOT=c:\go
+GOBIN=
+GOARCH=amd64
+GOOS=windows
+CGO_ENABLED=1
+
+
+PATH=%GOBIN%;%GOROOT%\bin;%PATH%
+。。。
+</code></pre>
+
+<p>将其中的<code>GOROOT=c:\go</code>修改为当前Go安装路径，存盘即可，如果有MinGW64，可以将<code>c:\MinGW64\bin</code>加入PATH中以便go调用gcc支持CGO编译。</p>
+
+<p>以Linux操作系统，64位Go语言为例，
+工具栏的环境配置中选择linux64，点<code>编辑环境</code>，进入LiteIDE编辑linux64.env文件</p>
+
+<pre><code>GOROOT=$HOME/go
+GOBIN=
+GOARCH=amd64
+GOOS=linux
+CGO_ENABLED=1
+
+
+PATH=$GOBIN:$GOROOT/bin:$PATH   
+。。。
+</code></pre>
+
+<p>将其中的<code>GOROOT=$HOME/go</code>修改为当前Go安装路径，存盘即可。</p></li>
+
+<li><p>GOPATH设置</p>
+
+<p>Go语言的工具链使用GOPATH设置，是Go语言开发的项目路径列表，在命令行中输入(在LiteIDE中也可以<code>Ctrl+,</code>直接输入)<code>go help gopath</code>快速查看GOPATH文档。</p>
+
+<p>在LiteIDE中可以方便的查看和设置GOPATH。通过<code>菜单－查看－GOPATH</code>设置，可以查看系统中已存在的GOPATH列表，
+同时可根据需要添加项目目录到自定义GOPATH列表中。</p></li>
+</ul>
+
+<h2>Sublime Text</h2>
+
+<p>这里将介绍Sublime Text 2（以下简称Sublime）+GoSublime+gocode+MarGo的组合，那么为什么选择这个组合呢？</p>
+
+<ul>
+<li><p>自动化提示代码,如下图所示</p>
+
+<p><img src="images/1.4.sublime1.png?raw=true" alt="" />
+</p>
+
+<p>图1.5 sublime自动化提示界面</p></li>
+
+<li><p>保存的时候自动格式化代码，让您编写的代码更加美观，符合Go的标准。</p></li>
+
+<li><p>支持项目管理</p>
+
+<p><img src="images/1.4.sublime2.png?raw=true" alt="" />
+</p>
+
+<p>图1.6 sublime项目管理界面</p></li>
+
+<li><p>支持语法高亮</p></li>
+
+<li><p>Sublime Text 2可免费使用，只是保存次数达到一定数量之后就会提示是否购买，点击取消继续用，和正式注册版本没有任何区别。</p></li>
+</ul>
+
+<p>接下来就开始讲如何安装，下载<a href="http://www.sublimetext.com/">Sublime</a></p>
+
+<p>根据自己相应的系统下载相应的版本，然后打开Sublime，对于不熟悉Sublime的同学可以先看一下这篇文章<a href="http://lucifr.com/139225/sublime-text-2-tricks-and-tips/">Sublime Text 2 入门及技巧</a></p>
+
+<ol>
+<li><p>打开之后安装 Package Control：Ctrl+ 打开命令行，执行如下代码：</p>
+
+<pre><code>import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print 'Please restart Sublime Text to finish installation'
+</code></pre></li>
+</ol>
+
+<p>这个时候重启一下Sublime，可以发现在在菜单栏多了一个如下的栏目，说明Package Control已经安装成功了。</p>
+
+<p><img src="images/1.4.sublime3.png?raw=true" alt="" />
+</p>
+
+<pre><code>图1.7 sublime包管理
+</code></pre>
+
+<ol>
+<li><p>接下来安装gocode和MarGo。
+打开终端运行如下代码（需要git）</p>
+
+<pre><code>go get github.com/nsf/gocode
+go get github.com/DisposaBoy/MarGo
+</code></pre></li>
+</ol>
+
+<p>这个时候我们会发现在<code>$GOPATH/bin</code>下面多了两个可执行文件，gocode和MarGo，这两个文件会在GoSublime加载时自动启动。</p>
+
+<ol>
+<li>安装完之后就可以安装Sublime的插件了。需安装GoSublime、SidebarEnhancements和Go Build，安装插件之后记得重启Sublime生效，Ctrl+Shift+p打开Package Controll 输入<code>pcip</code>（即“Package Control: Install Package”的缩写）。</li>
+</ol>
+
+<p>这个时候看左下角显示正在读取包数据，完成之后出现如下界面</p>
+
+<p><img src="images/1.4.sublime4.png?raw=true" alt="" />
+</p>
+
+<pre><code>图1.8 sublime安装插件界面
+</code></pre>
+
+<p>这个时候输入GoSublime，按确定就开始安装了。同理应用于SidebarEnhancements和Go Build。</p>
+
+<ol>
+<li>验证是否安装成功，你可以打开Sublime，打开main.go，看看语法是不是高亮了，输入<code>import</code>是不是自动化提示了，<code>import &quot;fmt&quot;</code>之后，输入<code>fmt.</code>是不是自动化提示有函数了。</li>
+</ol>
+
+<p>如果已经出现这个提示，那说明你已经安装完成了，并且完成了自动提示。</p>
+
+<p>如果没有出现这样的提示，一般就是你的<code>$PATH</code>没有配置正确。你可以打开终端，输入gocode，是不是能够正确运行，如果不行就说明<code>$PATH</code>没有配置正确。</p>
+
+<h2>Vim</h2>
+
+<p>Vim是从vi发展出来的一个文本编辑器, 代码补全、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。</p>
+
+<p><img src="images/1.4.vim.png?raw=true" alt="" />
+</p>
+
+<p>图1.9 VIM编辑器自动化提示Go界面</p>
+
+<ol>
+<li><p>配置vim高亮显示</p>
+
+<pre><code>cp -r $GOROOT/misc/vim/* ~/.vim/
+</code></pre></li>
+
+<li><p>在~/.vimrc文件中增加语法高亮显示</p>
+
+<pre><code>filetype plugin indent on
+syntax on
+</code></pre></li>
+
+<li><p>安装<a href="https://github.com/nsf/gocode/">Gocode</a></p>
+
+<pre><code>go get -u github.com/nsf/gocode
+</code></pre>
+
+<p>gocode默认安装到<code>$GOBIN</code>下面。</p></li>
+
+<li><p>配置<a href="https://github.com/nsf/gocode/">Gocode</a></p>
+
+<pre><code>~ cd $GOPATH/src/github.com/nsf/gocode/vim
+~ ./update.bash
+~ gocode set propose-builtins true
+propose-builtins true
+~ gocode set lib-path &quot;/home/border/gocode/pkg/linux_amd64&quot;
+lib-path &quot;/home/border/gocode/pkg/linux_amd64&quot;
+~ gocode set
+propose-builtins true
+lib-path &quot;/home/border/gocode/pkg/linux_amd64&quot;
+</code></pre>
+
+<blockquote>
+<p>gocode set里面的两个参数的含意说明：</p>
+
+<p>propose-builtins：是否自动提示Go的内置函数、类型和常量，默认为false，不提示。</p>
+
+<p>lib-path:默认情况下，gocode只会搜索<strong>$GOPATH/pkg/$GOOS_$GOARCH</strong> 和 <strong>$GOROOT/pkg/$GOOS_$GOARCH</strong>目录下的包，当然这个设置就是可以设置我们额外的lib能访问的路径</p>
+</blockquote></li>
+
+<li><p>恭喜你，安装完成，你现在可以使用<code>:e main.go</code>体验一下开发Go的乐趣。</p></li>
+</ol>
+
+<h2>Emacs</h2>
+
+<p>Emacs传说中的神器，她不仅仅是一个编辑器，它是一个整合环境，或可称它为集成开发环境，这些功能如让使用者置身于全功能的操作系统中。</p>
+
+<p><img src="images/1.4.emacs.png?raw=true" alt="" />
+</p>
+
+<p>图1.10 Emacs编辑Go主界面</p>
+
+<ol>
+<li><p>配置Emacs高亮显示</p>
+
+<pre><code>cp $GOROOT/misc/emacs/* ~/.emacs.d/
+</code></pre></li>
+
+<li><p>安装<a href="https://github.com/nsf/gocode/">Gocode</a></p>
+
+<pre><code>go get -u github.com/nsf/gocode
+</code></pre>
+
+<p>gocode默认安装到<code>$GOBIN</code>里面下面。</p></li>
+
+<li><p>配置<a href="https://github.com/nsf/gocode/">Gocode</a></p>
+
+<pre><code>~ cd $GOPATH/src/github.com/nsf/gocode/emacs
+~ cp go-autocomplete.el ~/.emacs.d/
+~ gocode set propose-builtins true
+propose-builtins true
+~ gocode set lib-path &quot;/home/border/gocode/pkg/linux_amd64&quot; // 换为你自己的路径
+lib-path &quot;/home/border/gocode/pkg/linux_amd64&quot;
+~ gocode set
+propose-builtins true
+lib-path &quot;/home/border/gocode/pkg/linux_amd64&quot;
+</code></pre></li>
+
+<li><p>需要安装 <a href="http://www.emacswiki.org/emacs/AutoComplete">Auto Completion</a></p></li>
+</ol>
+
+<p>下载AutoComplete并解压</p>
+
+<pre><code>~ make install DIR=$HOME/.emacs.d/auto-complete
+</code></pre>
+
+<p>配置~/.emacs文件</p>
+
+<pre><code>    ;;auto-complete
+    (require 'auto-complete-config)
+    (add-to-list 'ac-dictionary-directories &quot;~/.emacs.d/auto-complete/ac-dict&quot;)
+    (ac-config-default)
+    (local-set-key (kbd &quot;M-/&quot;) 'semantic-complete-analyze-inline)
+    (local-set-key &quot;.&quot; 'semantic-complete-self-insert)
+    (local-set-key &quot;&gt;&quot; 'semantic-complete-self-insert)
+</code></pre>
+
+<p>详细信息参考: <a href="http://www.emacswiki.org/emacs/AutoComplete">http://www.emacswiki.org/emacs/AutoComplete</a></p>
+
+<ol>
+<li><p>配置.emacs</p>
+
+<pre><code>;; golang mode
+(require 'go-mode-load)
+(require 'go-autocomplete)
+;; speedbar
+;; (speedbar 1)
+(speedbar-add-supported-extension &quot;.go&quot;)
+(add-hook
+'go-mode-hook
+'(lambda ()
+    ;; gocode
+    (auto-complete-mode 1)
+    (setq ac-sources '(ac-source-go))
+    ;; Imenu &amp; Speedbar
+    (setq imenu-generic-expression
+        '((&quot;type&quot; &quot;^type *\\([^ \t\n\r\f]*\\)&quot; 1)
+        (&quot;func&quot; &quot;^func *\\(.*\\) {&quot; 1)))
+    (imenu-add-to-menubar &quot;Index&quot;)
+    ;; Outline mode
+    (make-local-variable 'outline-regexp)
+    (setq outline-regexp &quot;//\\.\\|//[^\r\n\f][^\r\n\f]\\|pack\\|func\\|impo\\|cons\\|var.\\|type\\|\t\t*....&quot;)
+    (outline-minor-mode 1)
+    (local-set-key &quot;\M-a&quot; 'outline-previous-visible-heading)
+    (local-set-key &quot;\M-e&quot; 'outline-next-visible-heading)
+    ;; Menu bar
+    (require 'easymenu)
+    (defconst go-hooked-menu
+        '(&quot;Go tools&quot;
+        [&quot;Go run buffer&quot; go t]
+        [&quot;Go reformat buffer&quot; go-fmt-buffer t]
+        [&quot;Go check buffer&quot; go-fix-buffer t]))
+    (easy-menu-define
+        go-added-menu
+        (current-local-map)
+        &quot;Go tools&quot;
+        go-hooked-menu)
+
+
+    ;; Other
+    (setq show-trailing-whitespace t)
+    ))
+;; helper function
+(defun go ()
+    &quot;run current buffer&quot;
+    (interactive)
+    (compile (concat &quot;go run &quot; (buffer-file-name))))
+
+
+;; helper function
+(defun go-fmt-buffer ()
+    &quot;run gofmt on current buffer&quot;
+    (interactive)
+    (if buffer-read-only
+    (progn
+        (ding)
+        (message &quot;Buffer is read only&quot;))
+    (let ((p (line-number-at-pos))
+    (filename (buffer-file-name))
+    (old-max-mini-window-height max-mini-window-height))
+        (show-all)
+        (if (get-buffer &quot;*Go Reformat Errors*&quot;)
+    (progn
+        (delete-windows-on &quot;*Go Reformat Errors*&quot;)
+        (kill-buffer &quot;*Go Reformat Errors*&quot;)))
+        (setq max-mini-window-height 1)
+        (if (= 0 (shell-command-on-region (point-min) (point-max) &quot;gofmt&quot; &quot;*Go Reformat Output*&quot; nil &quot;*Go Reformat Errors*&quot; t))
+    (progn
+        (erase-buffer)
+        (insert-buffer-substring &quot;*Go Reformat Output*&quot;)
+        (goto-char (point-min))
+        (forward-line (1- p)))
+    (with-current-buffer &quot;*Go Reformat Errors*&quot;
+    (progn
+        (goto-char (point-min))
+        (while (re-search-forward &quot;&lt;standard input&gt;&quot; nil t)
+        (replace-match filename))
+        (goto-char (point-min))
+        (compilation-mode))))
+        (setq max-mini-window-height old-max-mini-window-height)
+        (delete-windows-on &quot;*Go Reformat Output*&quot;)
+        (kill-buffer &quot;*Go Reformat Output*&quot;))))
+;; helper function
+(defun go-fix-buffer ()
+    &quot;run gofix on current buffer&quot;
+    (interactive)
+    (show-all)
+    (shell-command-on-region (point-min) (point-max) &quot;go tool fix -diff&quot;))
+</code></pre></li>
+
+<li><p>恭喜你，你现在可以体验在神器中开发Go的乐趣。默认speedbar是关闭的，如果打开需要把 ;; (speedbar 1) 前面的注释去掉，或者也可以通过 <em>M-x speedbar</em> 手动开启。</p></li>
+</ol>
+
+<h2>Eclipse</h2>
+
+<p>Eclipse也是非常常用的开发利器，以下介绍如何使用Eclipse来编写Go程序。</p>
+
+<p><img src="images/1.4.eclipse1.png?raw=true" alt="" />
+</p>
+
+<p>图1.11 Eclipse编辑Go的主界面</p>
+
+<ol>
+<li><p>首先下载并安装好<a href="http://www.eclipse.org/">Eclipse</a></p></li>
+
+<li><p>下载<a href="https://code.google.com/p/goclipse/">goeclipse</a>插件</p>
+
+<p><a href="http://code.google.com/p/goclipse/wiki/InstallationInstructions">http://code.google.com/p/goclipse/wiki/InstallationInstructions</a></p></li>
+
+<li><p>下载gocode，用于go的代码补全提示</p>
+
+<p>gocode的github地址：</p>
+
+<pre><code>https://github.com/nsf/gocode
+</code></pre>
+
+<p>在windows下要安装git，通常用<a href="https://code.google.com/p/msysgit/">msysgit</a></p>
+
+<p>再在cmd下安装：</p>
+
+<pre><code>go get -u github.com/nsf/gocode
+</code></pre>
+
+<p>也可以下载代码，直接用go build来编译，会生成gocode.exe</p></li>
+
+<li><p>下载<a href="http://sourceforge.net/projects/mingw/files/MinGW/">MinGW</a>并按要求装好</p></li>
+
+<li><p>配置插件</p>
+
+<p>Windows-&gt;Reference-&gt;Go</p></li>
+</ol>
+
+<p>(1).配置Go的编译器</p>
+
+<p><img src="images/1.4.eclipse2.png?raw=true" alt="" />
+</p>
+
+<p>图1.12 设置Go的一些基础信息</p>
+
+<p>(2).配置Gocode（可选，代码补全），设置Gocode路径为之前生成的gocode.exe文件</p>
+
+<p><img src="images/1.4.eclipse3.png?raw=true" alt="" />
+</p>
+
+<p>图1.13 设置gocode信息</p>
+
+<p>(3).配置GDB（可选，做调试用），设置GDB路径为MingW安装目录下的gdb.exe文件</p>
+
+<p><img src="images/1.4.eclipse4.png?raw=true" alt="" />
+</p>
+
+<p>图1.14 设置GDB信息</p>
+
+<ol>
+<li><p>测试是否成功</p>
+
+<p>新建一个go工程，再建立一个hello.go。如下图：</p>
+
+<p><img src="images/1.4.eclipse5.png?raw=true" alt="" />
+</p>
+
+<p>图1.15 新建项目编辑文件</p>
+
+<p>调试如下（要在console中用输入命令来调试）：</p>
+
+<p><img src="images/1.4.eclipse6.png?raw=true" alt="" />
+</p>
+
+<p>图1.16 调试Go程序</p></li>
+</ol>
+
+<h2>IntelliJ IDEA</h2>
+
+<p>熟悉Java的读者应该对于idea不陌生，idea是通过一个插件来支持go语言的高亮语法,代码提示和重构实现。</p>
+
+<ol>
+<li><p>先下载idea，idea支持多平台：win,mac,linux，如果有钱就买个正式版，如果不行就使用社区免费版，对于只是开发Go语言来说免费版足够用了</p>
+
+<p><img src="images/1.4.idea1.png?raw=true" alt="" />
+</p></li>
+
+<li><p>安装Go插件，点击菜单File中的Setting，找到Plugins,点击,Broswer repo按钮。国内的用户可能会报错，自己解决哈。</p>
+
+<p><img src="images/1.4.idea3.png?raw=true" alt="" />
+</p></li>
+
+<li><p>这时候会看见很多插件，搜索找到Golang,双击,download and install。等到golang那一行后面出现Downloaded标志后,点OK。</p>
+
+<p><img src="images/1.4.idea4.png?raw=true" alt="" />
+</p>
+
+<p>然后点 Apply .这时候IDE会要求你重启。</p></li>
+
+<li><p>重启完毕后,创建新项目会发现已经可以创建golang项目了：</p>
+
+<p><img src="images/1.4.idea5.png?raw=true" alt="" />
+</p>
+
+<p>下一步,会要求你输入 go sdk的位置,一般都安装在C:\Go，linux和mac根据自己的安装目录设置，选中目录确定,就可以了。</p></li>
+</ol>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一节: <a href="01.3.html">Go 命令</a></li>
+<li>下一节: <a href="01.5.html">总结</a></li>
+</ul>
+</html>

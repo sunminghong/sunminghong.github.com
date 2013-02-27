@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>4.1 处理表单的输入</h1>
+
+<p>先来看一个表单递交的例子，我们有如下的表单内容，命名成文件login.gtpl(放入当前新建项目的目录里面)</p>
+
+<pre><code>&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&quot;http://127.0.0.1:9090/login&quot; method=&quot;post&quot;&gt;
+    用户名:&lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;
+    密码:&lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;登陆&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>上面递交表单到服务器的<code>/login</code>，当用户输入信息点击登陆之后，会跳转到服务器的路由<code>login</code>里面，我们首先要判断这个是什么方式传递过来，POST还是GET呢？</p>
+
+<p>http包里面有一个很简单的方式就可以获取，我们在前面web的例子的基础上来看看怎么处理login页面的form数据</p>
+
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;html/template&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+    &quot;strings&quot;
+)
+
+func sayhelloName(w http.ResponseWriter, r *http.Request) {
+    r.ParseForm()       //解析url传递的参数，对于POST则解析响应包的主体（request body）
+    //注意:如果没有调用ParseForm方法，下面无法获取表单的数据
+    fmt.Println(r.Form) //这些信息是输出到服务器端的打印信息
+    fmt.Println(&quot;path&quot;, r.URL.Path)
+    fmt.Println(&quot;scheme&quot;, r.URL.Scheme)
+    fmt.Println(r.Form[&quot;url_long&quot;])
+    for k, v := range r.Form {
+        fmt.Println(&quot;key:&quot;, k)
+        fmt.Println(&quot;val:&quot;, strings.Join(v, &quot;&quot;))
+    }
+    fmt.Fprintf(w, &quot;Hello astaxie!&quot;) //这个写入到w的是输出到客户端的
+}
+
+func login(w http.ResponseWriter, r *http.Request) {
+    fmt.Println(&quot;method:&quot;, r.Method) //获取请求的方法
+    if r.Method == &quot;GET&quot; {
+        t, _ := template.ParseFiles(&quot;login.gtpl&quot;)
+        t.Execute(w, nil)
+    } else {
+        //请求的是登陆数据，那么执行登陆的逻辑判断
+        fmt.Println(&quot;username:&quot;, r.Form[&quot;username&quot;])
+        fmt.Println(&quot;password:&quot;, r.Form[&quot;password&quot;])
+    }
+}
+
+func main() {
+    http.HandleFunc(&quot;/&quot;, sayhelloName)       //设置访问的路由
+    http.HandleFunc(&quot;/login&quot;, login)         //设置访问的路由
+    err := http.ListenAndServe(&quot;:9090&quot;, nil) //设置监听的端口
+    if err != nil {
+        log.Fatal(&quot;ListenAndServe: &quot;, err)
+    }
+}
+</code></pre>
+
+<p>通过上面的代码我们可以看出获取请求方法是通过<code>r.Method</code>来完成的，这是个字符串类型的变量，返回GET, POST, PUT等method信息。</p>
+
+<p>login函数中我们根据<code>r.Method</code>来判断是显示登录界面还是处理登录逻辑。当GET方式请求时显示登录界面，其他方式请求时则处理登录逻辑，如查询数据库、验证登录信息等。</p>
+
+<p>当我们在浏览器里面打开<code>http://127.0.0.1:9090/login</code>的时候，出现如下界面</p>
+
+<p><img src="images/4.1.login.png?raw=true" alt="" />
+</p>
+
+<p>图4.1 用户登录界面</p>
+
+<p>我们输入用户名和密码之后发现在服务器端是不会打印出来任何输出的，为什么呢？默认情况下，Handler里面是不会自动解析form的，必须显式的调用<code>r.ParseForm()</code>后，你才能对这个表单数据进行操作。我们修改一下代码，在<code>fmt.Println(&quot;username:&quot;, r.Form[&quot;username&quot;])</code>之前加一行<code>r.ParseForm()</code>,重新编译，再次测试输入递交，现在是不是在服务器端有输出你的输入的用户名和密码了。</p>
+
+<p><code>r.Form</code>里面包含了所有请求的参数，比如URL中query-string、POST的数据、PUT的数据，所有当你在URL的query-string字段和POST冲突时，会保存成一个slice，里面存储了多个值，Go官方文档中说在接下来的版本里面将会把POST、GET这些数据分离开来。</p>
+
+<p>现在我们修改一下login.gtpl里面form的action值<code>http://127.0.0.1:9090/login</code>修改为<code>http://127.0.0.1:9090/login?username=astaxie</code>，再次测试，服务器的输出username是不是一个slice。服务器端的输出如下：</p>
+
+<p><img src="images/4.1.slice.png?raw=true" alt="" />
+</p>
+
+<p>图4.2 服务器端打印接受到的信息</p>
+
+<p><code>request.Form</code>是一个url.Values类型，里面存储的是对应的类似<code>key=value</code>的信息，下面展示了可以对form数据进行的一些操作:</p>
+
+<pre><code>v := url.Values{}
+v.Set(&quot;name&quot;, &quot;Ava&quot;)
+v.Add(&quot;friend&quot;, &quot;Jess&quot;)
+v.Add(&quot;friend&quot;, &quot;Sarah&quot;)
+v.Add(&quot;friend&quot;, &quot;Zoe&quot;)
+// v.Encode() == &quot;name=Ava&amp;friend=Jess&amp;friend=Sarah&amp;friend=Zoe&quot;
+fmt.Println(v.Get(&quot;name&quot;))
+fmt.Println(v.Get(&quot;friend&quot;))
+fmt.Println(v[&quot;friend&quot;])
+</code></pre>
+
+<blockquote>
+<p><strong>Tips</strong>:
+Request本身也提供了FormValue()函数来获取用户提交的参数。如r.Form[&ldquo;username&rdquo;]也可写成r.FormValue(&ldquo;username&rdquo;)。调用r.FormValue时会自动调用r.ParseForm，所以不必提前调用。r.FormValue只会返回同名参数中的第一个，若参数不存在则返回空字符串。</p>
+</blockquote>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一节: <a href="04.0.html">表单</a></li>
+<li>下一节: <a href="04.2.html">验证表单的输入</a></li>
+</ul>
+</html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>3.3 Go如何使得Web工作</h1>
+
+<p>前面小节介绍了如何通过Go搭建一个Web服务，我们可以看到简单应用一个net/http包就方便的搭建起来了。那么Go在底层到底是怎么做的呢？万变不离其宗，Go的Web服务工作也离不开我们第一小节介绍的Web工作方式。</p>
+
+<h2>web工作方式的几个概念</h2>
+
+<p>以下均是服务器端的几个概念</p>
+
+<p>Request：用户请求的信息，用来解析用户的请求信息，包括post、get、cookie、url等信息</p>
+
+<p>Response：服务器需要反馈给客户端的信息</p>
+
+<p>Conn：用户的每次请求链接</p>
+
+<p>Handler：处理请求和生成返回信息的处理逻辑</p>
+
+<h2>分析http包运行机制</h2>
+
+<p>如下图所示，是Go实现Web服务的工作模式的流程图</p>
+
+<p><img src="images/3.3.http.png?raw=true" alt="" />
+</p>
+
+<p>图3.9 http包执行流程</p>
+
+<ol>
+<li><p>创建Listen Socket, 监听指定的端口, 等待客户端请求到来。</p></li>
+
+<li><p>Listen Socket接受客户端的请求, 得到Client Socket, 接下来通过Client Socket与客户端通信。</p></li>
+
+<li><p>处理客户端的请求, 首先从Client Socket读取HTTP请求的协议头, 如果是POST方法, 还可能要读取客户端提交的数据, 然后交给相应的handler处理请求, handler处理完毕准备好客户端需要的数据, 通过Client Socket写给客户端。</p></li>
+</ol>
+
+<p>这整个的过程里面我们只要了解清楚下面三个问题，也就知道Go是如何让Web运行起来了</p>
+
+<ul>
+<li>如何监听端口？</li>
+<li>如何接收客户端请求？</li>
+<li>如何分配handler？</li>
+</ul>
+
+<p>前面小节的代码里面我们可以看到，Go是通过一个函数<code>ListenAndServe</code>来处理这些事情的，这个底层其实这样处理的：初始化一个server对象，然后调用了<code>net.Listen(&quot;tcp&quot;, addr)</code>，也就是底层用TCP协议搭建了一个服务，然后监控我们设置的端口。</p>
+
+<p>下面代码来自Go的http包的源码，通过下面的代码我们可以看到整个的http处理过程：</p>
+
+<pre><code>func (srv *Server) Serve(l net.Listener) error {
+    defer l.Close()
+    var tempDelay time.Duration // how long to sleep on accept failure
+    for {
+        rw, e := l.Accept()
+        if e != nil {
+            if ne, ok := e.(net.Error); ok &amp;&amp; ne.Temporary() {
+                if tempDelay == 0 {
+                    tempDelay = 5 * time.Millisecond
+                } else {
+                    tempDelay *= 2
+                }
+                if max := 1 * time.Second; tempDelay &gt; max {
+                    tempDelay = max
+                }
+                log.Printf(&quot;http: Accept error: %v; retrying in %v&quot;, e, tempDelay)
+                time.Sleep(tempDelay)
+                continue
+            }
+            return e
+        }
+        tempDelay = 0
+        if srv.ReadTimeout != 0 {
+            rw.SetReadDeadline(time.Now().Add(srv.ReadTimeout))
+        }
+        if srv.WriteTimeout != 0 {
+            rw.SetWriteDeadline(time.Now().Add(srv.WriteTimeout))
+        }
+        c, err := srv.newConn(rw)
+        if err != nil {
+            continue
+        }
+        go c.serve()
+    }
+    panic(&quot;not reached&quot;)
+}
+</code></pre>
+
+<p>监控之后如何接收客户端的请求呢？上面代码执行监控端口之后，调用了<code>srv.Serve(net.Listener)</code>函数，这个函数就是处理接收客户端的请求信息。这个函数里面起了一个<code>for{}</code>，首先通过Listener接收请求，其次创建一个Conn，最后单独开了一个goroutine，把这个请求的数据当做参数扔给这个conn去服务：<code>go c.serve()</code>。这个就是高并发体现了，用户的每一次请求都是在一个新的goroutine去服务，相互不影响。</p>
+
+<p>那么如何具体分配到相应的函数来处理请求呢？conn首先会解析request:<code>c.readRequest()</code>,然后获取相应的handler:<code>handler := c.server.Handler</code>，也就是我们刚才在调用函数<code>ListenAndServe</code>时候的第二个参数，我们前面例子传递的是nil，也就是为空，那么默认获取<code>handler = DefaultServeMux</code>,那么这个变量用来做什么的呢？对，这个变量就是一个路由器，它用来匹配url跳转到其相应的handle函数，那么这个我们有设置过吗?有，我们调用的代码里面第一句不是调用了<code>http.HandleFunc(&quot;/&quot;, sayhelloName)</code>嘛。这个作用就是注册了请求<code>/</code>的路由规则，当请求uri为&rdquo;/&ldquo;，路由就会转到函数sayhelloName，DefaultServeMux会调用ServeHTTP方法，这个方法内部其实就是调用sayhelloName本身，最后通过写入response的信息反馈到客户端。</p>
+
+<p>详细的整个流程如下图所示：</p>
+
+<p><img src="images/3.3.illustrator.png?raw=true" alt="" />
+</p>
+
+<p>图3.10 一个http连接处理流程</p>
+
+<p>至此我们的三个问题已经全部得到了解答，你现在对于Go如何让Web跑起来的是否已经基本了解呢？</p>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一节: <a href="03.2.html">GO搭建一个简单的web服务</a></li>
+<li>下一节: <a href="03.4.html">Go的http包详解</a></li>
+</ul>
+</html>

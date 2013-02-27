@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>7.5 文件操作</h1>
+
+<p>在任何计算机设备中，文件是都是必须的对象，而在Web编程中,文件的操作一直是Web程序员经常遇到的问题,文件操作在Web应用中是必须的,非常有用的,我们经常遇到生成文件目录,文件(夹)编辑等操作,现在我把Go中的这些操作做一详细总结并实例示范如何使用。</p>
+
+<h2>目录操作</h2>
+
+<p>文件操作的大多数函数都是在os包里面，下面列举了几个目录操作的：</p>
+
+<ul>
+<li><p>func Mkdir(name string, perm FileMode) error</p>
+
+<p>创建名称为name的目录，权限设置是perm，例如0777</p></li>
+
+<li><p>func MkdirAll(path string, perm FileMode) error</p>
+
+<p>根据path创建多级子目录，例如astaxie/test1/test2。</p></li>
+
+<li><p>func Remove(name string) error</p>
+
+<p>删除名称为name的目录，当目录下有文件或者其他目录是会出错</p></li>
+
+<li><p>func RemoveAll(path string) error</p>
+
+<p>根据path删除多级子目录，如果path是单个名称，那么该目录不删除。</p></li>
+</ul>
+
+<p>下面是演示代码：</p>
+
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;os&quot;
+)
+
+func main() {
+    os.Mkdir(&quot;astaxie&quot;, 0777)
+    os.MkdirAll(&quot;astaxie/test1/test2&quot;, 0777)
+    err := os.Remove(&quot;astaxie&quot;)
+    if err != nil {
+        fmt.Println(err)
+    }
+    os.RemoveAll(&quot;astaxie&quot;)
+}
+</code></pre>
+
+<h2>文件操作</h2>
+
+<h3>建立与打开文件</h3>
+
+<p>新建文件可以通过如下两个方法</p>
+
+<ul>
+<li><p>func Create(name string) (file *File, err Error)</p>
+
+<p>根据提供的文件名创建新的文件，返回一个文件对象，默认权限是0666的文件，返回的文件对象是可读写的。</p></li>
+
+<li><p>func NewFile(fd uintptr, name string) *File</p>
+
+<p>根据文件描述符创建相应的文件，返回一个文件对象</p></li>
+</ul>
+
+<p>通过如下两个方法来打开文件：</p>
+
+<ul>
+<li><p>func Open(name string) (file *File, err Error)</p>
+
+<p>该方法打开一个名称为name的文件，但是是只读方式，内部实现其实调用了OpenFile。</p></li>
+
+<li><p>func OpenFile(name string, flag int, perm uint32) (file *File, err Error)</p>
+
+<p>打开名称为name的文件，flag是打开的方式，只读、读写等，perm是权限</p></li>
+</ul>
+
+<h3>写文件</h3>
+
+<p>写文件函数：</p>
+
+<ul>
+<li><p>func (file *File) Write(b []byte) (n int, err Error)</p>
+
+<p>写入byte类型的信息到文件</p></li>
+
+<li><p>func (file *File) WriteAt(b []byte, off int64) (n int, err Error)</p>
+
+<p>在指定位置开始写入byte类型的信息</p></li>
+
+<li><p>func (file *File) WriteString(s string) (ret int, err Error)</p>
+
+<p>写入string信息到文件</p></li>
+</ul>
+
+<p>写文件的示例代码</p>
+
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;os&quot;
+)
+
+func main() {
+    userFile := &quot;astaxie.txt&quot;
+    fout, err := os.Create(userFile)
+    defer fout.Close()
+    if err != nil {
+        fmt.Println(userFile, err)
+        return
+    }
+    for i := 0; i &lt; 10; i++ {
+        fout.WriteString(&quot;Just a test!\r\n&quot;)
+        fout.Write([]byte(&quot;Just a test!\r\n&quot;))
+    }
+}
+</code></pre>
+
+<h3>读文件</h3>
+
+<p>读文件函数：</p>
+
+<ul>
+<li><p>func (file *File) Read(b []byte) (n int, err Error)</p>
+
+<p>读取数据到b中</p></li>
+
+<li><p>func (file *File) ReadAt(b []byte, off int64) (n int, err Error)</p>
+
+<p>从off开始读取数据到b中</p></li>
+</ul>
+
+<p>读文件的示例代码:</p>
+
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;os&quot;
+)
+
+func main() {
+    userFile := &quot;asatxie.txt&quot;
+    fl, err := os.Open(userFile)
+    defer fl.Close()
+    if err != nil {
+        fmt.Println(userFile, err)
+        return
+    }
+    buf := make([]byte, 1024)
+    for {
+        n, _ := fl.Read(buf)
+        if 0 == n {
+            break
+        }
+        os.Stdout.Write(buf[:n])
+    }
+}
+</code></pre>
+
+<h3>删除文件</h3>
+
+<p>Go语言里面删除文件和删除文件夹是同一个函数</p>
+
+<ul>
+<li><p>func Remove(name string) Error</p>
+
+<p>调用该函数就可以删除文件名为name的文件</p></li>
+</ul>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一节: <a href="07.4.html">模板处理</a></li>
+<li>下一节: <a href="07.6.html">字符串处理</a></li>
+</ul>
+</html>

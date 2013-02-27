@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>13.4 日志和配置设计</h1>
+
+<h2>日志和配置的重要性</h2>
+
+<p>前面已经介绍过日志在我们程序开发中起着很重要的作用，通过日志我们可以记录调试我们的信息，当初介绍过一个日志系统seelog，根据不同的level输出不同的日志，这个对于程序开发和程序部署来说至关重要。我们可以在程序开发中设置level低一点，部署的时候把level设置高，这样我们开发中的调试信息可以屏蔽掉。</p>
+
+<p>配置模块对于应用部署牵涉到服务器不同的一些配置信息非常有用，例如一些数据库配置信息、监听端口、监听地址等都是可以通过配置文件来配置，这样我们的应用程序就具有很强的灵活性，可以通过配置文件的配置部署在不同的机器上，可以连接不同的数据库之类的。</p>
+
+<h2>beego的日志设计</h2>
+
+<p>beego的日志设计部署思路来自于seelog，根据不同的level来记录日志，但是beego设计的日志系统比较轻量级，采用了系统的log.Logger接口，默认输出到os.Stdout,用户可以实现这个接口然后通过beego.SetLogger设置自定义的输出，详细的实现如下所示：</p>
+
+<pre><code>// Log levels to control the logging output.
+const (
+    LevelTrace = iota
+    LevelDebug
+    LevelInfo
+    LevelWarning
+    LevelError
+    LevelCritical
+)
+
+// logLevel controls the global log level used by the logger.
+var level = LevelTrace
+
+// LogLevel returns the global log level and can be used in
+// own implementations of the logger interface.
+func Level() int {
+    return level
+}
+
+// SetLogLevel sets the global log level used by the simple
+// logger.
+func SetLevel(l int) {
+    level = l
+}
+</code></pre>
+
+<p>上面这一段实现了日志系统的日志分级，默认的级别是Trace，用户通过SetLevel可以设置不同的分级。</p>
+
+<pre><code>// logger references the used application logger.
+var BeeLogger = log.New(os.Stdout, &quot;&quot;, log.Ldate|log.Ltime)
+
+// SetLogger sets a new logger.
+func SetLogger(l *log.Logger) {
+    BeeLogger = l
+}
+
+// Trace logs a message at trace level.
+func Trace(v ...interface{}) {
+    if level &lt;= LevelTrace {
+        BeeLogger.Printf(&quot;[T] %v\n&quot;, v)
+    }
+}
+
+// Debug logs a message at debug level.
+func Debug(v ...interface{}) {
+    if level &lt;= LevelDebug {
+        BeeLogger.Printf(&quot;[D] %v\n&quot;, v)
+    }
+}
+
+// Info logs a message at info level.
+func Info(v ...interface{}) {
+    if level &lt;= LevelInfo {
+        BeeLogger.Printf(&quot;[I] %v\n&quot;, v)
+    }
+}
+
+// Warning logs a message at warning level.
+func Warn(v ...interface{}) {
+    if level &lt;= LevelWarning {
+        BeeLogger.Printf(&quot;[W] %v\n&quot;, v)
+    }
+}
+
+// Error logs a message at error level.
+func Error(v ...interface{}) {
+    if level &lt;= LevelError {
+        BeeLogger.Printf(&quot;[E] %v\n&quot;, v)
+    }
+}
+
+// Critical logs a message at critical level.
+func Critical(v ...interface{}) {
+    if level &lt;= LevelCritical {
+        BeeLogger.Printf(&quot;[C] %v\n&quot;, v)
+    }
+}
+</code></pre>
+
+<p>上面这一段代码默认初始化了一个BeeLogger对象，默认输出到os.Stdout，用户可以通过beego.SetLogger来设置实现了logger的接口输出。这里面实现了六个函数：</p>
+
+<ul>
+<li>Trace（一般的记录信息，举例如下：）
+
+<ul>
+<li>&ldquo;Entered parse function validation block&rdquo;</li>
+<li>&ldquo;Validation: entered second &lsquo;if&rsquo;&rdquo;</li>
+<li>&ldquo;Dictionary &lsquo;Dict&rsquo; is empty. Using default value&rdquo;</li>
+</ul></li>
+<li>Debug（调试信息，举例如下：）
+
+<ul>
+<li>&ldquo;Web page requested: <a href="http://somesite.com">http://somesite.com</a> Params=&lsquo;&hellip;&rsquo;&rdquo;</li>
+<li>&ldquo;Response generated. Response size: 10000. Sending.&rdquo;</li>
+<li>&ldquo;New file received. Type:PNG Size:20000&rdquo;</li>
+</ul></li>
+<li>Info（打印信息，举例如下：）
+
+<ul>
+<li>&ldquo;Web server restarted&rdquo;</li>
+<li>&ldquo;Hourly statistics: Requested pages: 12345 Errors: 123 &hellip;&rdquo;</li>
+<li>&ldquo;Service paused. Waiting for &lsquo;resume&rsquo; call&rdquo;</li>
+</ul></li>
+<li>Warn（警告信息，举例如下：）
+
+<ul>
+<li>&ldquo;Cache corrupted for file=&lsquo;test.file&rsquo;. Reading from back-end&rdquo;</li>
+<li>&ldquo;Database 192.168.0.7/DB not responding. Using backup 192.168.0.8/DB&rdquo;</li>
+<li>&ldquo;No response from statistics server. Statistics not sent&rdquo;</li>
+</ul></li>
+<li>Error（错误信息，举例如下：）
+
+<ul>
+<li>&ldquo;Internal error. Cannot process request #12345 Error:&hellip;.&rdquo;</li>
+<li>&ldquo;Cannot perform login: credentials DB not responding&rdquo;</li>
+</ul></li>
+<li>Critical（致命错误，举例如下：）
+
+<ul>
+<li>&ldquo;Critical panic received: &hellip;. Shutting down&rdquo;</li>
+<li>&ldquo;Fatal error: &hellip; App is shutting down to prevent data corruption or loss&rdquo;</li>
+</ul></li>
+</ul>
+
+<p>可以看到每个函数里面都有对level的判断，所以如果我们在部署的时候设置了level=LevelWarning，那么Trace、Debug、Info这三个函数都不会有任何的输出，以此类推。</p>
+
+<h2>beego的配置设计</h2>
+
+<p>配置信息的解析，beego实现了一个key=value的配置文件读取，类似ini配置文件的格式，就是一个文件解析的过程，然后把解析的数据保存到map中，最后在调用的时候通过几个string、int之类的函数调用返回相应的值，具体的实现请看下面：</p>
+
+<p>首先定义了一些ini配置文件的一些全局性常量  ：</p>
+
+<pre><code>var (
+    bComment = []byte{'#'}
+    bEmpty   = []byte{}
+    bEqual   = []byte{'='}
+    bDQuote  = []byte{'&quot;'}
+)
+</code></pre>
+
+<p>定义了配置文件的格式：</p>
+
+<pre><code>// A Config represents the configuration.
+type Config struct {
+    filename string
+    comment  map[int][]string  // id: []{comment, key...}; id 1 is for main comment.
+    data     map[string]string // key: value
+    offset   map[string]int64  // key: offset; for editing.
+    sync.RWMutex
+}
+</code></pre>
+
+<p>定义了解析文件的函数，解析文件的过程是打开文件，然后一行一行的读取，解析注释、空行和key=value数据：</p>
+
+<pre><code>// ParseFile creates a new Config and parses the file configuration from the
+// named file.
+func LoadConfig(name string) (*Config, error) {
+    file, err := os.Open(name)
+    if err != nil {
+        return nil, err
+    }
+
+    cfg := &amp;Config{
+        file.Name(),
+        make(map[int][]string),
+        make(map[string]string),
+        make(map[string]int64),
+        sync.RWMutex{},
+    }
+    cfg.Lock()
+    defer cfg.Unlock()
+    defer file.Close()
+
+    var comment bytes.Buffer
+    buf := bufio.NewReader(file)
+
+    for nComment, off := 0, int64(1); ; {
+        line, _, err := buf.ReadLine()
+        if err == io.EOF {
+            break
+        }
+        if bytes.Equal(line, bEmpty) {
+            continue
+        }
+
+        off += int64(len(line))
+
+        if bytes.HasPrefix(line, bComment) {
+            line = bytes.TrimLeft(line, &quot;#&quot;)
+            line = bytes.TrimLeftFunc(line, unicode.IsSpace)
+            comment.Write(line)
+            comment.WriteByte('\n')
+            continue
+        }
+        if comment.Len() != 0 {
+            cfg.comment[nComment] = []string{comment.String()}
+            comment.Reset()
+            nComment++
+        }
+
+        val := bytes.SplitN(line, bEqual, 2)
+        if bytes.HasPrefix(val[1], bDQuote) {
+            val[1] = bytes.Trim(val[1], `&quot;`)
+        }
+
+        key := strings.TrimSpace(string(val[0]))
+        cfg.comment[nComment-1] = append(cfg.comment[nComment-1], key)
+        cfg.data[key] = strings.TrimSpace(string(val[1]))
+        cfg.offset[key] = off
+    }
+    return cfg, nil
+}
+</code></pre>
+
+<p>下面实现了一些读取配置文件的函数，返回的值确定为bool、int、float64或string：</p>
+
+<pre><code>// Bool returns the boolean value for a given key.
+func (c *Config) Bool(key string) (bool, error) {
+    return strconv.ParseBool(c.data[key])
+}
+
+// Int returns the integer value for a given key.
+func (c *Config) Int(key string) (int, error) {
+    return strconv.Atoi(c.data[key])
+}
+
+// Float returns the float value for a given key.
+func (c *Config) Float(key string) (float64, error) {
+    return strconv.ParseFloat(c.data[key], 64)
+}
+
+// String returns the string value for a given key.
+func (c *Config) String(key string) string {
+    return c.data[key]
+}
+</code></pre>
+
+<h2>应用指南</h2>
+
+<p>下面这个函数是我一个应用中的例子，用来获取远程url地址的json数据，实现如下：</p>
+
+<pre><code>func GetJson() {
+    resp, err := http.Get(beego.AppConfig.String(&quot;url&quot;))
+    if err != nil {
+        beego.Critical(&quot;http get info error&quot;)
+        return
+    }
+    defer resp.Body.Close()
+    body, err := ioutil.ReadAll(resp.Body)
+    err = json.Unmarshal(body, &amp;AllInfo)
+    if err != nil {
+        beego.Critical(&quot;error:&quot;, err)
+    }
+}
+</code></pre>
+
+<p>函数中调用了框架的日志函数<code>beego.Critical</code>函数用来报错，调用了<code>beego.AppConfig.String(&quot;url&quot;)</code>用来获取配置文件中的信息，配置文件的信息如下(app.conf)：</p>
+
+<pre><code>appname = hs
+url =&quot;http://www.api.com/api.html&quot;
+</code></pre>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一章: <a href="13.3.html">controller设计</a></li>
+<li>下一节: <a href="13.5.html">实现博客的增删改</a></li>
+</ul>
+</html>

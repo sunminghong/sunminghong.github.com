@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<h1>5.5 使用beedb库进行ORM开发</h1>
+
+<p>beedb是我开发的一个Go进行ORM操作的库，它采用了Go style方式对数据库进行操作，实现了struct到数据表记录的映射。beedb是一个十分轻量级的Go ORM框架，开发这个库的本意降低复杂的ORM学习曲线，尽可能在ORM的运行效率和功能之间寻求一个平衡，beedb是目前开源的Go ORM框架中实现比较完整的一个库，而且运行效率相当不错，功能也基本能满足需求。但是目前还不支持关系关联，这个是接下来版本升级的重点。</p>
+
+<p>beedb是支持database/sql标准接口的ORM库，所以理论上来说，只要数据库驱动支持database/sql接口就可以无缝的接入beedb。目前我测试过的驱动包括下面几个：</p>
+
+<p>Mysql:github.com/ziutek/mymysql/godrv[*]</p>
+
+<p>Mysql:code.google.com/p/go-mysql-driver[*]</p>
+
+<p>PostgreSQL:github.com/bmizerany/pq[*]</p>
+
+<p>SQLite:github.com/mattn/go-sqlite3[*]</p>
+
+<p>MS ADODB: github.com/mattn/go-adodb[*]</p>
+
+<p>ODBC: bitbucket.org/miquella/mgodbc[*]</p>
+
+<h2>安装</h2>
+
+<p>beedb支持go get方式安装，是完全按照Go Style的方式来实现的。</p>
+
+<pre><code>go get github.com/astaxie/beedb
+</code></pre>
+
+<h2>如何初始化</h2>
+
+<p>首先你需要import相应的数据库驱动包、database/sql标准接口包以及beedb包，如下所示：</p>
+
+<pre><code>import (
+    &quot;database/sql&quot;
+    &quot;github.com/astaxie/beedb&quot;
+    _ &quot;github.com/ziutek/mymysql/godrv&quot;
+)
+</code></pre>
+
+<p>导入必须的package之后,我们需要打开到数据库的链接，然后创建一个beedb对象（以MySQL为例)，如下所示</p>
+
+<pre><code>db, err := sql.Open(&quot;mymysql&quot;, &quot;test/xiemengjun/123456&quot;)
+if err != nil {
+    panic(err)
+}
+orm := beedb.New(db)
+</code></pre>
+
+<p>beedb的New函数实际上应该有两个参数，第一个参数标准接口的db，第二个参数是使用的数据库引擎，如果你使用的数据库引擎是MySQL/Sqlite,那么第二个参数都可以省略。</p>
+
+<p>如果你使用的数据库是SQLServer，那么初始化需要：</p>
+
+<pre><code>orm = beedb.New(db, &quot;mssql&quot;)
+</code></pre>
+
+<p>如果你使用了PostgreSQL，那么初始化需要：</p>
+
+<pre><code>orm = beedb.New(db, &quot;pg&quot;)
+</code></pre>
+
+<p>目前beedb支持打印调试，你可以通过如下的代码实现调试</p>
+
+<pre><code>beedb.OnDebug=true
+</code></pre>
+
+<p>接下来我们的例子采用前面的数据库表Userinfo，现在我们建立相应的struct</p>
+
+<pre><code>type Userinfo struct {
+    Uid     int `PK` //如果表的主键不是id，那么需要加上pk注释，显式的说这个字段是主键
+    Username    string
+    Departname  string
+    Created     time.Time
+}
+</code></pre>
+
+<blockquote>
+<p>注意一点，beedb针对驼峰命名会自动帮你转化成下划线字段，例如你定义了Struct名字为<code>UserInfo</code>，那么转化成底层实现的时候是<code>user_info</code>，字段命名也遵循该规则。</p>
+</blockquote>
+
+<h2>插入数据</h2>
+
+<p>下面的代码演示了如何插入一条记录，可以看到我们操作的是strcut对象，而不是原生的sql语句，最后通过调用Save接口将数据保存到数据库。</p>
+
+<pre><code>var saveone Userinfo
+saveone.Username = &quot;Test Add User&quot;
+saveone.Departname = &quot;Test Add Departname&quot;
+saveone.Created = time.Now()
+orm.Save(&amp;saveone)
+</code></pre>
+
+<p>我们看到插入之后<code>saveone.Uid</code>就是插入成功之后的自增ID。Save接口会自动帮你存进去。</p>
+
+<p>beedb接口提供了另外一种插入的方式，map数据插入。</p>
+
+<pre><code>add := make(map[string]interface{})
+add[&quot;username&quot;] = &quot;astaxie&quot;
+add[&quot;departname&quot;] = &quot;cloud develop&quot;
+add[&quot;created&quot;] = &quot;2012-12-02&quot;
+orm.SetTable(&quot;userinfo&quot;).Insert(add)
+</code></pre>
+
+<p>插入多条数据</p>
+
+<pre><code>addslice := make([]map[string]interface{})
+add:=make(map[string]interface{})
+add2:=make(map[string]interface{})
+add[&quot;username&quot;] = &quot;astaxie&quot;
+add[&quot;departname&quot;] = &quot;cloud develop&quot;
+add[&quot;created&quot;] = &quot;2012-12-02&quot;
+add2[&quot;username&quot;] = &quot;astaxie2&quot;
+add2[&quot;departname&quot;] = &quot;cloud develop2&quot;
+add2[&quot;created&quot;] = &quot;2012-12-02&quot;
+addslice =append(addslice, add, add2)
+orm.SetTable(&quot;userinfo&quot;).Insert(addslice)
+</code></pre>
+
+<p>上面的操作方式有点类似链式查询，熟悉jquery的同学应该会觉得很亲切，每次调用的method都会返回原orm对象，以便可以继续调用该对象上的其他method。</p>
+
+<p>上面我们调用的SetTable函数是显式的告诉ORM，我要执行的这个map对应的数据库表是<code>userinfo</code>。</p>
+
+<h2>更新数据</h2>
+
+<p>继续上面的例子来演示更新操作，现在saveone的主键已经有值了，此时调用save接口，beedb内部会自动调用update以进行数据的更新而非插入操作。</p>
+
+<pre><code>saveone.Username = &quot;Update Username&quot;
+saveone.Departname = &quot;Update Departname&quot;
+saveone.Created = time.Now()
+orm.Save(&amp;saveone)  //现在saveone有了主键值，就执行更新操作
+</code></pre>
+
+<p>更新数据也支持直接使用map操作</p>
+
+<pre><code>t := make(map[string]interface{})
+t[&quot;username&quot;] = &quot;astaxie&quot;
+orm.SetTable(&quot;userinfo&quot;).SetPK(&quot;uid&quot;).Where(2).Update(t)
+</code></pre>
+
+<p>这里我们调用了几个beedb的函数</p>
+
+<p>SetPK：显式的告诉ORM，数据库表<code>userinfo</code>的主键是<code>uid</code>。</p>
+
+<p>Where:用来设置条件，支持多个参数，第一个参数如果为整数，相当于调用了Where(&ldquo;主键=?&rdquo;,值)。
+Updata函数接收map类型的数据，执行更新数据。</p>
+
+<h2>查询数据</h2>
+
+<p>beedb的查询接口比较灵活，具体使用请看下面的例子</p>
+
+<p>例子1，根据主键获取数据：</p>
+
+<pre><code>var user Userinfo
+//Where接受两个参数，支持整形参数
+orm.Where(&quot;uid=?&quot;, 27).Find(&amp;user)
+</code></pre>
+
+<p>例子2：</p>
+
+<pre><code>var user2 Userinfo
+orm.Where(3).Find(&amp;user2) // 这是上面版本的缩写版，可以省略主键
+</code></pre>
+
+<p>例子3，不是主键类型的的条件：</p>
+
+<pre><code>var user3 Userinfo
+//Where接受两个参数，支持字符型的参数
+orm.Where(&quot;name  = ?&quot;, &quot;john&quot;).Find(&amp;user3)
+</code></pre>
+
+<p>例子4，更加复杂的条件：</p>
+
+<pre><code>var user4 Userinfo
+//Where支持三个参数
+orm.Where(&quot;name = ? and age &lt; ?&quot;, &quot;john&quot;, 88).Find(&amp;user4)
+</code></pre>
+
+<p>可以通过如下接口获取多条数据，请看示例</p>
+
+<p>例子1，根据条件id&gt;3，获取20位置开始的10条数据的数据</p>
+
+<pre><code>var allusers []Userinfo
+err := orm.Where(&quot;id &gt; ?&quot;, &quot;3&quot;).Limit(10,20).FindAll(&amp;allusers)
+</code></pre>
+
+<p>例子2，省略limit第二个参数，默认从0开始，获取10条数据</p>
+
+<pre><code>var tenusers []Userinfo
+err := orm.Where(&quot;id &gt; ?&quot;, &quot;3&quot;).Limit(10).FindAll(&amp;tenusers)
+</code></pre>
+
+<p>例子3，获取全部数据</p>
+
+<pre><code>var everyone []Userinfo
+err := orm.OrderBy(&quot;uid desc,username asc&quot;).FindAll(&amp;everyone)
+</code></pre>
+
+<p>上面这些里面里面我们看到一个函数Limit，他是用来控制查询结构条数的。</p>
+
+<p>Limit:支持两个参数，第一个参数表示查询的条数，第二个参数表示读取数据的起始位置，默认为0。</p>
+
+<p>OrderBy:这个函数用来进行查询排序，参数是需要排序的条件。</p>
+
+<p>上面这些例子都是将获取的的数据直接映射成struct对象，如果我们只是想获取一些数据到map，以下方式可以实现：</p>
+
+<pre><code>a, _ := orm.SetTable(&quot;userinfo&quot;).SetPK(&quot;uid&quot;).Where(2).Select(&quot;uid,username&quot;).FindMap()
+</code></pre>
+
+<p>上面和这个例子里面又出现了一个新的接口函数Select，这个函数用来指定需要查询多少个字段。默认为全部字段<code>*</code>。</p>
+
+<p>FindMap()函数返回的是<code>[]map[string][]byte</code>类型，所以你需要自己作类型转换。</p>
+
+<h2>删除数据</h2>
+
+<p>beedb提供了丰富的删除数据接口，请看下面的例子</p>
+
+<p>例子1，删除单条数据</p>
+
+<pre><code>//saveone就是上面示例中的那个saveone
+orm.Delete(&amp;saveone)
+</code></pre>
+
+<p>例子2，删除多条数据</p>
+
+<pre><code>//alluser就是上面定义的获取多条数据的slice
+orm.DeleteAll(&amp;alluser)
+</code></pre>
+
+<p>例子3，根据sql删除数据</p>
+
+<pre><code>orm.SetTable(&quot;userinfo&quot;).Where(&quot;uid&gt;?&quot;, 3).DeleteRow()
+</code></pre>
+
+<h2>关联查询</h2>
+
+<p>目前beedb还不支持struct的关联关系，但是有些应用却需要用到连接查询，所以现在beedb提供了一个简陋的实现方案：</p>
+
+<pre><code>a, _ := orm.SetTable(&quot;userinfo&quot;).Join(&quot;LEFT&quot;, &quot;userdeatail&quot;, &quot;userinfo.uid=userdeatail.uid&quot;).Where(&quot;userinfo.uid=?&quot;, 1).Select(&quot;userinfo.uid,userinfo.username,userdeatail.profile&quot;).FindMap()
+</code></pre>
+
+<p>上面代码中我们看到了一个新的接口Join函数，这个函数带有三个参数</p>
+
+<ul>
+<li>第一个参数可以是：INNER, LEFT, OUTER, CROSS等</li>
+<li>第二个参数表示连接的表</li>
+<li>第三个参数表示连接的条件</li>
+</ul>
+
+<h2>Group By和Having</h2>
+
+<p>针对有些应用需要用到group by和having的功能，beedb也提供了一个简陋的实现</p>
+
+<pre><code>a, _ := orm.SetTable(&quot;userinfo&quot;).GroupBy(&quot;username&quot;).Having(&quot;username='astaxie'&quot;).FindMap()
+</code></pre>
+
+<p>上面的代码中出现了两个新接口函数</p>
+
+<p>GroupBy:用来指定进行groupby的字段</p>
+
+<p>Having:用来指定having执行的时候的条件</p>
+
+<h2>进一步的发展</h2>
+
+<p>目前beedb已经获得了很多来自国内外用户的反馈，我目前也正在考虑重构，接下来会在几个方面进行改进</p>
+
+<ul>
+<li>实现interface设计，类似databse/sql/driver的设计，设计beedb的接口，然后去实现相应数据库的CRUD操作</li>
+
+<li><p>实现关联数据库设计，支持一对一，一对多，多对多的实现，示例代码如下：</p>
+
+<p>type Profile struct{
+    Nickname    string
+    Mobile      string
+}</p>
+
+<p>type Userinfo struct {
+    Uid     int <code>PK</code>
+    Username    string
+    Departname  string
+    Created     time.Time
+    Profile     <code>HasOne</code>
+}</p></li>
+
+<li><p>自动建库建表建索引</p></li>
+
+<li><p>实现连接池的实现，采用goroutine</p></li>
+</ul>
+
+<h2>links</h2>
+
+<ul>
+<li><a href="preface.html">目录</a></li>
+<li>上一节: <a href="05.4.html">使用PostgreSQL数据库</a></li>
+<li>下一节: <a href="05.6.html">NOSQL数据库操作</a></li>
+</ul>
+</html>
