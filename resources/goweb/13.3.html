@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{background:#f7f7f7;}</style>
 </head>
+<body>
 <h1>13.3 controller设计</h1>
 
 <p>传统的MVC框架大多数是基于Action设计的后缀式映射，然而，现在Web流行REST风格的架构。尽管使用Filter或者rewrite能够通过URL重写实现REST风格的URL，但是为什么不直接设计一个全新的REST风格的 MVC框架呢？本小节就是基于这种思路来讲述如何从头设计一个基于REST风格的MVC框架中的controller，最大限度地简化Web应用的开发，甚至编写一行代码就可以实现“Hello, world”。</p>
@@ -177,4 +180,4 @@ func (this *MainController) Get() {
 <li>上一章: <a href="13.2.html">自定义路由器设计</a></li>
 <li>下一节: <a href="13.4.html">日志和配置设计</a></li>
 </ul>
-</html>
+</body></html>

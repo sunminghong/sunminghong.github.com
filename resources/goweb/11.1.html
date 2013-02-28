@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{background:#f7f7f7;}</style>
 </head>
+<body>
 <h1>11.1 错误处理</h1>
 
 <p>Go语言主要的设计准则是：简洁、明白，简洁是指语法和C类似，相当的简单，明白是指任何语句都是很明显的，不含有任何隐含的东西，在错误处理方案的设计中也贯彻了这一思想。我们知道在C语言里面是通过返回-1或者NULL之类的信息来表示错误，但是对于使用者来说，不查看相应的API说明文档，根本搞不清楚这个返回值究竟代表什么意思，比如:返回0是成功，还是失败,而Go定义了一个叫做error的类型，来显式表达错误。在使用时，通过把返回的error变量与nil的比较，来判定操作是否成功。例如<code>os.Open</code>函数在打开文件失败时将返回一个不为nil的error变量</p>
@@ -231,4 +234,4 @@ func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 <li>上一节: <a href="11.0.html">错误处理，调试和测试</a></li>
 <li>下一节: <a href="11.2.html">使用GDB调试</a></li>
 </ul>
-</html>
+</body></html>

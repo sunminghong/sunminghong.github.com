@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{background:#f7f7f7;}</style>
 </head>
+<body>
 <h1>12.3 应用部署</h1>
 
 <p>程序开发完毕之后，我们现在要部署Web应用程序了，但是我们如何来部署这些应用程序呢？因为Go程序编译之后是一个可执行文件，编写过C程序的读者一定知道采用daemon就可以完美的实现程序后台持续运行，但是目前Go还无法完美的实现daemon，因此，针对Go的应用程序部署，我们可以利用第三方工具来管理，第三方的工具有很多，例如Supervisord、upstart、daemontools等，这小节我介绍目前自己系统中采用的工具Supervisord。</p>
@@ -218,4 +221,4 @@ stdout_logfile = /var/log/supervisord/blogdemon.log
 <li>上一章: <a href="12.2.html">网站错误处理</a></li>
 <li>下一节: <a href="12.4.html">备份和恢复</a></li>
 </ul>
-</html>
+</body></html>
