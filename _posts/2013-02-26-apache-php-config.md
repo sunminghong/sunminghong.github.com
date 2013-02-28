@@ -1,6 +1,6 @@
 ---
 layout: post
-title: centos6.2+Apache+php+mysql 配置备注
+title: centos6.2+Apache+php+mysql 配置备忘
 description: 本文是我对一次不顺利的 centos6.2+Apache+php+mysql 配置做的备忘。
 keywords: centos,apache,php,mysql
 ---
