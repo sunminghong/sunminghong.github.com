@@ -75,9 +75,10 @@ keywords: golang,go语言,web
 
 ### 3. 国内快速在线查看地址
 
-由于国内访问github比较慢，于是我将 .md 文档生成html后放到了我的blog和sina sae 上，方便自己看（因为没有任何多余内容，很快，因此我常在手机上看）。现在分享给大家：  
-+ 在sina sae 上[http://maxia.sinaapp.com/static/goweb/index.html](http://maxia.sinaapp.com/static/goweb/index.html)（推荐）
-+ [http://blog.5d13.cn/resources/goweb](http://blog.5d13.cn/resources/goweb)
+由于国内访问github比较慢，于是我将 .md 文档生成html后放到了我的blog和sina sae 上，方便自己看（因为没有任何多余内容，很快，因此我常在手机上看）。现在分享给大家：
+
+ + 在sina sae 上[http://maxia.sinaapp.com/static/goweb/index.html](http://maxia.sinaapp.com/static/goweb/index.html)（推荐）
+ + [http://blog.5d13.cn/resources/goweb](http://blog.5d13.cn/resources/goweb)
 
 声明：这仅仅是为了方便呀，作者如果反感请给我email。
 
