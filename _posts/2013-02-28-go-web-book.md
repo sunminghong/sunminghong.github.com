@@ -1,12 +1,12 @@
 ---
 layout: post
-title: 《Go Web 编程》一本学习golang（Google go 语言）的一本开源书籍 - 好书推荐
+title: 第一本golang(go语言)开源书籍《Go Web 编程》 - 好书推荐
 description: 最近在学习go语言，相关的书籍很少，中文的就更少了。而 astaxie 编写并开源了 《Go Web编程》《Build Web Application with Golang》。
 keywords: golang,go语言,web
 ---
 
 ### 引言
-经过很久的“观望”我最终决定学习[golang](http://code.google.com/p/golang/) 。于是开始找资料和书籍，无意中发现了 [采访：关于Go语言和《Go Web编程》](http://www.infoq.com/cn/articles/go-web-programming-interview) 一文，于是开始看《Build Web Application with Golang》，感觉由浅入深，通俗易懂，于是推荐给朋友们。
+经过很久的“观望”我最终决定学习[golang](http://code.google.com/p/golang/) 。于是开始找资料和书籍，无意中看到 [采访：关于Go语言和《Go Web编程》](http://www.infoq.com/cn/articles/go-web-programming-interview) 一文后在github上 fork 了该书项目并开始研读《Build Web Application with Golang》，感觉该书由浅入深，通俗易懂，于是在此推荐给朋友们。
 
 对于作者[astaxie](https://github.com/astaxie/)及该书的联合作者们的无私奉献，我无限钦佩之至！国内的同学们都如此，那。。。
 
@@ -81,5 +81,4 @@ keywords: golang,go语言,web
  + [http://blog.5d13.cn/resources/goweb](http://blog.5d13.cn/resources/goweb)
 
 声明：这仅仅是为了方便呀，作者如果反感请给我email。
-
 
