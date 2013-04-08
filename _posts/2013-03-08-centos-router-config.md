@@ -15,7 +15,7 @@ keywords: centos,apache,php,mysql
     - 内网所有用户可以通过192.168.1.1 访问外网
 
 ###2. pppoe 配置
-\* 以下代码里**包起来的为我填写的，(*...*)括起来为注释
+\* 以下代码里\*\*...\*\*包起来的为我填写的，(\*...\*)括起来为注释
 {% highlight bash lineno%}
 [root@localhost ~]# pppoe-setup
 LOGIN NAME
