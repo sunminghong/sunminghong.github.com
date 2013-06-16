@@ -59,7 +59,7 @@
                     <ul class="fn-clear" id="J_nav">
                         <li><a href="/" class="current" rel="nofollow">Home</a></li>
                         {% for category in site.categories %}
-	<li><a href="/{{ category | first }}.html">{{ category | first }}({{ category | last | size }})</a></li>
+                        <li><a href="/{{ category | first }}.html">{{ category | first }}</a></li><!-- ({{ category | last | size }})-->
 	{% endfor %}
 
                         <li><a href="/archives.html" class="" rel="bookmark">Archives</a></li>

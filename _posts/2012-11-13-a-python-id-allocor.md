@@ -1,5 +1,6 @@
 ---
 layout: post
+category: python
 title: 一个用python写类unix进程id分配器
 description: 可用于一些需要在有限的号码区间内分配唯一ID的应用，如游戏里的房间号、在线客户ID等
 keywords: pid,python,房间号
