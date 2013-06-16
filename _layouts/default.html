@@ -58,9 +58,9 @@
                 <nav class="ui-grid-11 violet-nav">
                     <ul class="fn-clear" id="J_nav">
                         <li><a href="/" class="current" rel="nofollow">Home</a></li>
-｛％ for category in site.categories ％｝
-	<li><a href="/｛｛ category | first ｝｝.html">｛｛ category | first ｝｝(｛｛ category | last | size ｝｝)</a></li>
-	｛％ endfor ％｝
+                        {% for category in site.categories %}
+	<li><a href="/{{ category | first }}.html">{{ category | first }}({{ category | last | size }})</a></li>
+	{% endfor %}
 
                         <li><a href="/archives.html" class="" rel="bookmark">Archives</a></li>
                         <li><a href="/projects.html" class="" rel="bookmark">Open Projects</a></li>
