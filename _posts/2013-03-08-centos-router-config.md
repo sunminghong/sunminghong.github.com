@@ -17,6 +17,7 @@ keywords: centos,apache,php,mysql
 
 ###2. pppoe 配置
 \* 以下代码里\*\*...\*\*包起来的为我填写的，(\*...\*)括起来为注释
+
 {% highlight bash lineno%}
 [root@localhost ~]# pppoe-setup
 LOGIN NAME
