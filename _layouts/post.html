@@ -10,7 +10,9 @@ isPost: true
                     <a href="/" rel="nofollow" >Home</a>
                     <span>&#9830;</span>
                     <!-- <a href="/archives.html" rel="nofollow" >Archives</a> -->
-                    <a href="/{{ page.categories }}.html">{{ page.categories }}</a>
+                        {% for category in page.categories %}
+                    <a href="/{{ category }}.html">{{ category }}</a> 
+	{% endfor %}
                     <span>&#9830;</span>
                     <h2>{{ page.title }}</h2>
                 </div>
