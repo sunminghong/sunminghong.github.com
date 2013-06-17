@@ -51,3 +51,4 @@ SELINUX=disabled
 ###5.其它点滴记录：
 + 添加新用户 *grant all privileges on DATABASENAME.\* to 'USERNAME'@'localhost' identified by 'PASSWORD';
 
+
