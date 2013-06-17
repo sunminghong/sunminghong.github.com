@@ -1,6 +1,7 @@
 ---
 layout: post
 categories: 
+- work
 - read
 - golang
 title: 第一本golang(go语言)开源书籍《Go Web 编程》 - 好书推荐
