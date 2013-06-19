@@ -3,7 +3,7 @@ layout: post
 categories: 
 - work
 - golang
-title: 我将用golang写手机游戏服务器
+title: 为什么选择golang写手机游戏服务器
 description: 经过对golang语言的了解、试写，最终我决定采用golang写游戏服务器。
 keywords: golang
 ---

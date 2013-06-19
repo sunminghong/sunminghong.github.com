@@ -2,6 +2,8 @@
 layout: post
 categories: 
 - work
+- read
+- golang
 title: 第一本golang(go语言)开源书籍《Go Web 编程》 - 好书推荐
 description: 最近在学习go语言，相关的书籍很少，中文的就更少了。而 astaxie 编写并开源了 《Go Web编程》《Build Web Application with Golang》。
 keywords: golang,go语言,web
