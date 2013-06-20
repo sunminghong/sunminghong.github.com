@@ -232,13 +232,13 @@ keywords: golang,网络应用协议
 
 ### 协议文档定义举例
 > 
-> ###**1010** 客户端请求同步时间
+> ###**1000** 客户端请求同步时间
 > ver:0
 > data:
 > + 0,,t1,发送协议时客户端的时间戳(t1)
 > \* 这是一个备注说明
 > 
-> ###**2010** 客户端请求同步时间
+> ###**2000** 客户端请求同步时间
 > ver:0
 > data:
 > + 0,,returnFlag,成功否（=0 成功 =1 服务器端出错)
@@ -252,24 +252,146 @@ keywords: golang,网络应用协议
 > + 6,,abc,市委
 > + 7,,abcd,是市委第三方
 > 
-> ###**1011** 客户端请求同步时间
-> ver:0
-> data:
-> + 0,,t1,发送协议时客户端的时间戳(t1)
-> \* 这是一个备注说明
-> 
-> ###**2011** 客户端请求同步时间
-> ver:0
-> data:
-> + 0,,returnFlag,成功否（=0 成功 =1 服务器端出错)
-> + 1,,t1,发送协议时客户端的时间戳（t1)
-> + 2,,t2,服务器端就收到协议时服务器端的时间戳（t2)
-> + 3,,t3,回发该协议时服务器端的时间戳（t3)
-> + 4,,seconds,心跳频率（秒数）
-> + 5,list,generaList,武将列表
->     + 0,,name,武将名称
->     + 1,,id,武将ID
-> + 6,,abc,市委
-> + 7,,abcd,是市委第三方
+\*协议文档格式备注：
++ 采用了markdown语法，方便阅读（可用markdown阅读器阅读）
++ 定义了固定的格式，既方便编写，也方便处理，如我写了一个python脚本将它转成xml文档。：
+    > ###**协议编号** 协议标题
+    > ver:版本号
+    > data:
+    > + 数据项序号,数据想类型（省略则为默认的uvint类型）,变量名,数据项意义说明
+    >
++ 列表数据项必须缩进(参见上面的例子),可以嵌套
 
 
+数据读写
+=======
+我还是贴出golang 的一段测试代码，以作说明：
+{% highlight go lineno%}
+func LGTest_MessageWrite(t *testing.T) {
+    msgw := NewMessageWriter(BigEndian)
+
+    a1 := 989887834
+    a2 := 243
+    a3 := 3298374
+    a4 := -432423423
+    a5 := uint32(23)
+    a6 := uint16(32234)
+    a7 := "aasalfjnsaknhfaksdfashdr8o324rskjdfh8oq734tjkdfq9ytfhasdbhuewrq364tqfgeawgiruhsb njafeuaaa"
+
+    b1 :=uint(32342334)
+    b2 :=uint(42323499)
+    b3 :="bsdbbbb"
+
+    //编码/写数据
+    b4 := NewMessageListWriter(BigEndian) 
+    for i:=0;i<5;i++ {
+        b4.WriteStartTag()
+        
+        b4.WriteUint(i,0)
+        b4.WriteUint(i+1,0)
+        b4.WriteUint(i+2,0)
+        b4.WriteString(string(i+3),0)
+
+        b4.WriteEndTag()
+    }
+
+    //msgw.Write(a1)
+    msgw.Write(a1,a2,a3,a4,a5,a6,a7)
+    msgw.WriteUint(int(b1),9)
+    msgw.WriteU(b2)
+    msgw.WriteU(b3)
+    msgw.WriteList(b4,0)
+    //fmt.Println("messageWrite",msgw.ToBytes(1,1))
+
+    msgw.SetCode(1,1)
+    data := msgw.ToBytes()
+
+    //解码/读数据
+    msg := NewMessageReader(data,BigEndian)
+
+    v1 := msg.ReadInt() 
+    if v1!= a1 {
+        t.Error("item a1 ReadInt is wrong:",v1,a1)
+    }
+
+    v2 := msg.ReadInt() 
+    if v2!= a2 {
+        t.Error("item a2 ReadInt is wrong:",v2,a2)
+    }
+
+    v3 := msg.ReadInt() 
+    if v3!= a3 {
+        t.Error("item a3 ReadInt is wrong:",v3,a3)
+    }
+
+    v4 := msg.ReadInt() 
+    if v4!= a4 {
+        t.Error("item a4 ReadInt is wrong:",v4,a4)
+    }
+
+    v5 := msg.ReadUint32() 
+    if v5!= int(a5) {
+        t.Error("item a5 ReadInt is wrong:",v5,a5)
+    }
+
+    v6 := msg.ReadUint16() 
+    if v6!= int(a6) {
+        t.Error("item a6 ReadInt is wrong:",v6,a6)
+    }
+
+    v7 := msg.ReadString() 
+    if v7!= a7 {
+        t.Error("item a7 ReadInt is wrong:",v7,a7)
+    }
+    _ = msg.ReadUint() 
+    _ = msg.ReadUint() 
+
+    vv1 := msg.ReadUint() 
+    if vv1!= int(b1) {
+        t.Error("item a1 ReadInt is wrong:",vv1,b1)
+    }
+
+    vv2 := msg.ReadUint() 
+    if vv2!= int(b2) {
+        t.Error("item a1 ReadInt is wrong:",vv2,b2)
+    }
+
+    vv3 := msg.ReadString() 
+    if vv3!= b3 {
+        t.Error("item a1 ReadInt is wrong:",vv3,b3)
+    }
+
+    fmt.Println("------------------------------------------------------")
+    vv4 := msg.ReadList() 
+    
+    if vv4.Length != 5 {
+        t.Error("item list Readlist length is wrong:",vv4.Length,5)
+    }
+    
+    for i:=0;i<5;i++ {
+        vv4.ReadStartTag()
+        x := vv4.ReadUint()
+        if x!= i {
+            t.Error("item list(",i,",1) is wrong:",x,i)
+        }
+        x = vv4.ReadUint()
+        if x!= (i+1) {
+            t.Error("item list(",i,",2) is wrong:",x,i+1)
+        }
+        x = vv4.ReadUint()
+        if x!= (i+2) {
+            t.Error("item list(",i,",3) is wrong:",x,i+2)
+        }
+        x1 := vv4.ReadString()
+        if x1!= string(i+3) {
+            t.Error("item list(",i,",4) is wrong:",x1,i+3)
+        }
+        vv4.ReadEndTag()
+    }
+
+
+}
+{% endhighlight %}
+
+
+这是我写的最长的一篇博客了，详细的记录我对网络应用协议编解码的学习、思考及解决方法，以备忘，更希望大大们可以指点交流。
