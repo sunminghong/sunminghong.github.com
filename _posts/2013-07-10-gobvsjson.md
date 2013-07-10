@@ -23,6 +23,7 @@ keywords: gob,json,serialize,序列化,编码,解码,golang
 
 
 ###测试代码
+完整代码可以在[github.com 上的 letsgo 项目下载](https://github.com/sunminghong/letsgo/tree/master/helper)
 
 **serialize.go**
 {% highlight go lineno%}
@@ -165,6 +166,8 @@ func test2() int {
 }
 
 {% endhighlight %}
+
+完整代码可以在[github.com 上的 letsgo 项目下载](https://github.com/sunminghong/letsgo/tree/master/helper)
 
 ###测试结果
 >$ go test -bench=".*"
