@@ -2,7 +2,7 @@
 layout: post
 categories: 
 - work
-- read
+- letsgo
 - golang
 title: 手机网络游戏应用协议设计（一）
 description: 为了设计新游戏的网络应用协议，参考了golang 的gob，google protocol buf，以及之前项目的经验完成最终设计，本文做一备忘和与网友们交流之用。
