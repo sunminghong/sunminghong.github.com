@@ -4,7 +4,7 @@ categories:
 - work
 - golang
 - letsgo
-title: golang标准包gob和json性能比较
+title: golang标准包gob比json低一半？
 description: 在游戏服务器的开发过程中肯定需要用到数据序列化，本文对golang标准库的gob和json两种编码库进行了性能测试出现意料之外的事情：json的性能和字节效率都比gob高，why？
 keywords: gob,json,serialize,序列化,编码,解码,golang
 ---
