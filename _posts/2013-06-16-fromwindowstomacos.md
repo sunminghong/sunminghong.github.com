@@ -2,7 +2,7 @@
 layout: post
 categories: 
 - work
-- mac
+- other
 title: 冥冥中转到了mac 上进行开发
 description: 一个老windows程序员改用mac os 两个月的体会.
 keywords: mac

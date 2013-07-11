@@ -2,7 +2,6 @@
 layout: post
 categories: 
 - work
-- git
 - linux
 title: python写git钩子脚本实现多个版本的自动发布 - git备忘录
 description: 本文记录了孙铭鸿在实际的游戏开发中，通过git 分支或标签自动发不多个版本的实现过程及相关脚本。

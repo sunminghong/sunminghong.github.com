@@ -2,7 +2,6 @@
 layout: post
 categories: 
 - work
-- linux
 title: centos6.2 配置备忘
 description: 本文是我google无数次、苦逼无数次成功配置双网卡路由的备忘。
 keywords: centos,apache,php,mysql
