@@ -3,22 +3,12 @@ layout: post
 categories: 
 - golang
 - work
-title: golang标准包gob比json的性能低一半？
-description: 在游戏服务器的开发过程中肯定需要用到数据序列化，本文对golang标准库的gob和json两种编码库进行了性能测试出现意料之外的事情：json的性能和字节效率都比gob高，why？
+title: golang知识点笔记一
+description: 记录一些学用go 过程中的一些变态的、难以遇到的点滴。
 keywords: gob,json,serialize,序列化,编码,解码,golang
 ---
 
 ###前言
-在游戏服务器的开发过程中肯定需要用到数据序列化，于是我对golang标准库的gob和json两种编码方式进行了性能测试。结果却跌破我的眼睛：json的性能和字节效率都比gob高，这否定了我之前的“常识”——几乎所有介绍gob的文章都说gob的编码效率比json高。于是我将测试代码及环境记录下来，希望有兴趣的朋友共同探讨。
-
-###测试机配置
-我的测试机（也是我的开发机器）是mac mini，具体配置如下：
-> 2.3GHz Mac mini
-> 2.3GHz 四核 Intel Core i7 处理器
-> 4GB 内存
-> 1TB 硬盘1
-> Intel HD Graphics 4000 图形处理器
-> OS X Mountain Lion
 
 
 ###测试代码
@@ -26,8 +16,59 @@ keywords: gob,json,serialize,序列化,编码,解码,golang
 
 **serialize.go**
 {% highlight go lineno%}
-getsession() ptr <nil>
-getsession() Invalid container type invalid
+package helper
+
+
+import (
+    "bytes"
+    "encoding/gob"
+	"encoding/json"
+)
+
+type LGISerialize interface {
+    Serialize(src interface{}) (dst []byte, err error)
+    Deserialize(src []byte, dst interface{}) (err error)
+}
+
+type LGGobSerialize struct {
+}
+
+// serialize encodes a value using gob.
+func (self LGGobSerialize) Serialize(src interface{}) (v []byte, err error) {
+    buf := new(bytes.Buffer)
+    enc := gob.NewEncoder(buf)
+    err = enc.Encode(src)
+    if err != nil {
+        return
+    }
+    v = buf.Bytes()
+    return
+}
+
+// deserialize decodes a value using gob.
+func (self LGGobSerialize) Deserialize(src []byte, dst interface{}) (err error) {
+    dec := gob.NewDecoder(bytes.NewBuffer(src))
+    err = dec.Decode(dst)
+    return
+}
+
+type LGJsonSerialize struct {
+}
+
+// serialize encodes a value using gob.
+func (self LGJsonSerialize) Serialize(src interface{}) (v []byte, err error) {
+    v,err = json.Marshal(src)
+    if err != nil {
+        return
+    }
+    return
+}
+
+// deserialize decodes a value using gob.
+func (self LGJsonSerialize) Deserialize(src []byte, dst interface{}) (err error) {
+    err = json.Unmarshal(src,&dst)
+    return
+}
 
 {% endhighlight %}
 
