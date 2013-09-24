@@ -2,7 +2,6 @@
 layout: post
 categories:
 - work 
-- letsgo
 title: RPG手机游戏道具、物品、装备表设计
 description: 在总结了以前游戏开发的经验和参考了网上的一些文章后形成了我们新手机游戏的物品数据表（或道具表、装备表）设计方案。
 keywords: 手机游戏,道具,物品,装备,数据结构,table,字段,设计

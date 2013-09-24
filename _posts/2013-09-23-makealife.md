@@ -1,6 +1,7 @@
 ---
 layout: post
-category: life 
+categories: 
+- life 
 title: 早晨爬山，三餐在家，小了肚腩，瘦了4斤——老程序员新的生活方式
 description: 今年4月1号我搬到了公司新办公室的附近，我开始了我新的生活方式，如今180天过去了——小了肚腩，瘦了4斤！
 keywords: 爬山,打坐,三餐,肚腩,瘦了,新生活
