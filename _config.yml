@@ -1,7 +1,7 @@
 markdown: rdiscount
 pygments: true
 plugins: ./_plugins
-excerpt_separator:" "
+excerpt_separator: " "
 
 title: 鸿记 - 孙铭鸿的程序人生
 url: http://blog.5d13.cn
