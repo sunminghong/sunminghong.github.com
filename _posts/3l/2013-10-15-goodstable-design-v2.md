@@ -3,7 +3,7 @@ layout: post
 permalink: /3L/goodstable-design-v2.html
 categories:
 - work 
-- 3L
+- 3l
 title: 创新手机游戏《3L》开发点滴(3)——道具、物品、装备表设计 V2(最终版)
 description: 在总结了以前游戏开发的经验和参考了网上的一些文章后形成了我们新手机游戏的物品数据表（或道具表、装备表）设计方案。
 keywords: 手机游戏,道具,物品,装备,数据结构,table,字段,设计
@@ -82,7 +82,7 @@ keywords: 手机游戏,道具,物品,装备,数据结构,table,字段,设计
 //[创新手机游戏《3L》开发点滴][link3l]  
 //  
 
-[link3l]: http://blog.5d13.cn/3L.html"创新手游3L开发点滴"
-[link1]: http://blog.5d13.cn/3L/goodstable-design.html "RPG手机游戏道具、物品、装备表设计"
-[link2]: http://blog.5d13.cn/3L/table-primary-key-design.html "手机游戏数据表主键设计"
+[link3l]: http://blog.5d13.cn/3l.html"创新手游3L开发点滴"
+[link1]: http://blog.5d13.cn/3l/goodstable-design.html "RPG手机游戏道具、物品、装备表设计"
+[link2]: http://blog.5d13.cn/3l/table-primary-key-design.html "手机游戏数据表主键设计"
 
