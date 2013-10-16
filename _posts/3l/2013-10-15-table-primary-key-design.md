@@ -1,9 +1,10 @@
 ---
 layout: post
+permalink: /3L/table-primary-key-design.html
 categories:
 - work 
-- 3l
-title: 创新手机游戏《3L》——数据表主键设计 
+- 3L
+title: 创新手机游戏《3L》(3)——数据表主键设计 
 description: 记录下我们新款手机游戏的数据表主键设计过程及最终方案。 
 keywords: 手机游戏,数据结构,table,自增长,主键
 ---
@@ -126,8 +127,8 @@ def NewId(areaid,tablename):
 ------
 //  
 //每次开发一款新的游戏都是一个新的开始、新的征程、新的挑战，我们一直在路上！  
-//创新手机游戏[《3L》][link3l]开发志  
+//[创新手机游戏《3L》开发点滴][link3l]  
 //  
 
-[link3l]: http://blog.5d13.cn/3l.md "创新手游《3L》"
+[link3l]: http://blog.5d13.cn/3L.md "创新手游《3L》开发点滴"
 
