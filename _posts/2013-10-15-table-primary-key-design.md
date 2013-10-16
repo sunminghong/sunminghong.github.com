@@ -8,9 +8,6 @@ description: 记录下我们新款手机游戏的数据表主键设计过程及�
 keywords: 手机游戏,数据结构,table,自增长,主键
 ---
 
-创新手机游戏《3L》——数据表主键设计
-=========
-
 ###一、主键方案选择
 几经考虑，其间也参考了一些博客文章，获益匪浅。同行们采用了很多种方案，各有优缺点，最终我们确定采用自定义规则来程序生成主键值——唯一理由就是灵活：
 + 可以将区服编号融入到id里，在程序编码、运营查询时就可以只需要一个id就锁定数据记录
@@ -30,7 +27,7 @@ keywords: 手机游戏,数据结构,table,自增长,主键
 
 go lang 程序代码如下：
 	 
-{% highlight go lineno %}
+{% highlight go linenos %}
 package fun
 
 import (
@@ -76,7 +73,8 @@ func NewId(areaid int,tablename string) int {
 
 
 **python 代码如下：**
-{% highlight python lineno %}
+
+{% highlight python linenos %}
 _idcounts = {}
 
 #2013-10-01 00:00:00
