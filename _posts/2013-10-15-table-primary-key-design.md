@@ -69,7 +69,7 @@ func NewId(areaid int,tablename string) int {
     tt := int(time.Now().Unix()) - IdBaseTimestamp
     return areaid * 10000000000000000 + tt * 100000000 + _idCheckcode * 10000000 + num
 }
-{% endhightlight %}
+{% endhighlight %}
 
 
 **python 代码如下：**
