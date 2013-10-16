@@ -1,6 +1,6 @@
 ---
 layout: post
-permalink: /3L/goodstable-design-v2.html
+permalink: /3l/goodstable-design-v2.html
 categories:
 - work 
 - 3l

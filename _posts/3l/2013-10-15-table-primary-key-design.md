@@ -1,6 +1,6 @@
 ---
 layout: post
-permalink: /3L/table-primary-key-design.html
+permalink: /3l/table-primary-key-design.html
 categories:
 - work 
 - 3l
