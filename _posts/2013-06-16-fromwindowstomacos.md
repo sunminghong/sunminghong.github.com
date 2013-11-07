@@ -8,6 +8,8 @@ description: 一个老windows程序员改用mac os 两个月的体会.
 keywords: mac
 ---
 
+![桌面](http://blog.5d13.cn/resources/postimg/macdesk.jpg)
+
 ###2013年愚人节前我的开发环境情况
 我是一个有着15年windows使用经历的老programer，如果算上dos那还可以加两年。当过小企业网管，做过十二年的开发工作（直到老死，~_~）。这期间当然也是折腾过linux系统很多次，也多次想过逃离microsoft的世界，就像很多人戒烟很多次一样最终都还是再抽再戒。。。直到2012年开始与朋友们开发手机游戏开始，而我“专攻”服务器端且服务器端选型linux，开始了又一次的“戒烟”——戒掉windows。
 我没有偏题，呵呵。
@@ -100,6 +102,8 @@ windows不是魔鬼，相反我觉得windows7 超级好用！我都有些动摇�
 4. 我现在用的是mac mini二代，与同配置的windows系统相比，系统流畅度差距较大。
 5. 我认为mac 系统的界面比windows帅，但帅在哪？我说不出，但就是帅些！
 6. 各种软件的安装路径与各linux系统都不一样，可能对你的开发造成一些影响，如java环境路径、python路径、vim路径，在初期配置需要花费些功夫。
+
+![我的日常工作](http://blog.5d13.cn/resources/postimg/macdesk2.jpg)
 
 ###建议
 + magic trackpad 比鼠标好用，建议你们选购 
