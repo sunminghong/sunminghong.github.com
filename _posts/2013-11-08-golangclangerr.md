@@ -3,7 +3,7 @@ layout: post
 categories: 
 - work
 - golang
-title: golang编译出现clang错误
+title: mac上golang编译出现clang错误
 description: 两三周前开始golang编译包含cgo的包会报clang错误，困扰我几周，今天终于解决了，特此纪念。
 keywords: golang,clang
 ---
