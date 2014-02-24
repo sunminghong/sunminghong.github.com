@@ -15,13 +15,9 @@ keywords: gob,json,serialize,序列化,编码,解码,golang
 
 ###测试代码
 
-**serialize.go**
-{% highlight go lineno%}
-{% endhighlight %}
+#map 的简洁用法
+    
 
-**serialize_b_test.go**
-{% highlight go lineno%}
-{% endhighlight %}
 
 1. 玩家信息数据，包括玩家身份数据、玩家全局数值类数据，如玩家id，角色名，元宝等
 2. 主要游戏数据，包括玩家现在状态、成长、成就、道具等数据，是玩家游戏的结晶
